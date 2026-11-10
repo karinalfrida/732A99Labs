@@ -4,7 +4,7 @@ lang: en
 format:
   pdf:
     documentclass: article
-    include-in-header: report_preamble.tex
+    include-in-header: labreport_preamble.tex
     pdf-engine: xelatex
     keep-tex: true
     toc: false
@@ -89,6 +89,6 @@ $$
 Solving this for `Glucose` gives the (approximate) linear decision boundary line:
 
 $$
-Glucose = - `r round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2) - `r round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2)`
+Glucose = - `r round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2) - round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2)`
 $$
 ## Scatterplot with decision boundary line
