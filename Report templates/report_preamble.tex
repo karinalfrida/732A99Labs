@@ -1,0 +1,103 @@
+\renewcommand{\and}{\par}
+\setlength{\headheight}{30pt}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{needspace}
+\usepackage{array}
+\usepackage{amsmath}
+\renewcommand{\headrulewidth}{0pt}
+
+\raggedbottom
+\captionsetup[figure]{skip=2pt}
+\newcommand{\legendfont}{\fontsize{10pt}{10pt}\bfseries\selectfont}
+\newcommand{\resetfont}{\normalsize\normalfont}
+
+%  Väljer språk för automatiska titlar -->
+
+% \selectlanguage{english}
+
+%  Byter språket på figur- och tabellbeskrivningar till angivna namn
+
+\captionsetup[table]{name = Table}
+\setcounter{table}{0}
+\captionsetup[figure]{name = Figure}
+\setcounter{figure}{0}
+
+%  Anger att tabellbeskrivningar hamnar ovanför tabellen
+
+\floatstyle{plaintop}
+\restylefloat{table}
+
+%  Anger sidnumreringens position
+
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\pagestyle{fancy}
+
+\fancyhead[L]{\itshape\footnotesize{732A99 Machine Learning - Lab Report}}
+\fancyhead[R]{\itshape\footnotesize{jonda228, jonha849, kerar739}}
+
+% lot and lof
+\usepackage{etoolbox}
+\pretocmd{\listoffigures}{\clearpage}{}{}
+\apptocmd{\listoftables}{\clearpage}{}{}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+
+% \usepackage{titlesec}
+% \titleformat{\chapter}
+%    {\normalfont\LARGE\bfseries}{\thechapter.}{1em}{}
+% \titlespacing{\chapter}{0pt}{50pt}{2\baselineskip}
+
+\usepackage{ragged2e}
+
+% custom command for thesis front page + 1
+\newcommand{\makereportfrontpage}{
+\begin{titlepage}
+\clearpage\thispagestyle{empty}
+\centering
+\vspace{2cm}
+
+{\large Master's Programme in Statistics and Machine Learning \par}
+\vspace{4cm}
+{\Huge 732A99 Machine Learning\par}
+\vspace{1cm}
+{\Huge Computer Lab 1 Block 1\par}
+\vspace{1cm}
+{\Huge Lab Report \par}
+
+
+\vspace{4cm}
+
+{\normalsize Jonas Danielsson \\ jonda228 \par}
+{\normalsize Jonas Hautamäki Bengtsson \\ jonha849 \par}
+{\normalsize Kerstin Arbring \\ kerar739 \par}
+\vspace{2cm}
+
+\includegraphics[scale=0.75]{liu_logga.png}
+
+\vfill
+
+{\normalsize
+Division of Statistics and Machine Learning\\
+Department of Computer and Information Science\\
+Linköping University\\
+\today\par}
+
+\end{titlepage}
+
+% \clearpage
+% \thispagestyle{empty}
+% \vspace*{\fill}
+%
+% \clearpage
+% \setcounter{page}{1}
+}
