@@ -30,8 +30,6 @@ execute:
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
-Page 1 text
-
 ```{r run-source-files}
 #| include: false
 # source("R/01_1.R")
