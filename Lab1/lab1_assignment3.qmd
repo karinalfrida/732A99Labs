@@ -25,6 +25,7 @@ execute:
 
 # Assignment 3 - Logistic regression and Basis Function Expansion
 
+After reading the 
 ## Scatterplot diabetes vs age
 ```{r}
 #| include: false
