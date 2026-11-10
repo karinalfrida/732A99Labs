@@ -1,0 +1,93 @@
+---
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: report_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3 # change to 2 if preferable
+    geometry:
+      - margin=2.5cm # symmetrical
+  docx: default 
+  html:
+    toc: true
+execute:
+    echo: true        # change to false in final version
+    warning: true       # change to false in final version
+    message: true       # change to false in final version
+---
+
+# Assignment 3 - Logistic regression and Basis Function Expansion
+
+## Scatterplot diabetes vs age
+```{r}
+#| include: false
+#| echo: false 
+
+source("R/lab1_assignment3.R")
+```
+
+```{r}
+plot_3_1
+```
+
+Plotting plasma glucose levels vs. age shows that the two response groups, 
+`Non-diabetic` and `Diabetic`, show a substantial overlap. 
+`Diabetes` would therefore not be easily predicted by `Age` and `Glucose`
+in a standard logistic regression model which would not be able to derive 
+a straight line clearly separating the groups.
+
+## Logistic regression model 
+
+The vector form of the probailistic equation for a logistic regression model is
+$$
+P(Y = 1 \mid \mathbf{x}) = \operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x})
+$$ {#eq-logistic}
+where the sigmoid function is
+$$
+\operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathbf{x}}}
+$${#eq-sigmoid}
+
+For `Diabetes` as the binary target/response (y), and `Glucose` and `Age` as features/predictors (x1, x2):
+
+$$
+P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x_1 + \theta_2 x_2)}}
+$${#eq-logistic-expanded}
+Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the following probabilistic equation
+
+$$
+P(Y=1 \mid x_1,x_2) =
+\frac{1}{1 + e^{-(
+`r round(logistic_coef1["(Intercept)"], 4)` +
+`r round(logistic_coef1["Glucose"], 4)`x_1 +
+`r round(logistic_coef1["Age"], 4)`x_2)}}
+$${#eq-logistic-fitted}
+
+The training misclassification error for this model is `r round(training_misclass_error, 2)`.
+
+## Scatterplot colored by predicions
+```{r}
+plot_3_2
+```
+
+## Decision boundary equation
+
+Setting the probabilistic equation @eq-logistic-fitted = r (here = 0.5) 
+ gives the decision boundary equation as
+$$
+`r round(logistic_coef1["(Intercept)"], 4)` +
+`r round(logistic_coef1["Glucose"], 4)`x_1 +
+`r round(logistic_coef1["Age"], 4)`x_2 = 0
+$$
+Solving this for `Glucose` gives the (approximate) linear decision boundary line:
+
+$$
+Glucose = - `r round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2) - `r round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2)`
+$$
+## Scatterplot with decision boundary line
