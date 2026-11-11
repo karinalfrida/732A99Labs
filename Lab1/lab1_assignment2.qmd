@@ -1,0 +1,50 @@
+---
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: report_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3 # change to 2 if preferable
+    geometry:
+      - margin=2.5cm # symmetrical
+  docx: default
+  html:
+    toc: true
+execute:
+    echo: true        # change to false in final version
+    warning: true       # change to false in final version
+    message: true       # change to false in final version
+---
+
+# Assignment 2 - Linear regression and ridge regression
+
+```{r}
+#| include: false
+#| echo: false
+
+source("R/lab1_assignment2.R")
+```
+
+## Data partitioning and scaling
+
+<!-- How the data was split (60/40) and scaled, and why. -->
+
+## Linear regression
+
+<!-- Training and test MSE. Which variables contribute significantly? -->
+
+## Log-likelihood, ridge and degrees of freedom functions
+
+<!-- Short description of each function (3a-3d), with equations if useful. -->
+
+## Ridge regression for different penalties
+
+<!-- Training/test MSE and degrees of freedom for lambda = 1, 100, 1000.
+     Which lambda is most appropriate? Conclusions from the degrees of freedom. -->
