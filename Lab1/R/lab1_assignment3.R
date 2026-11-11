@@ -71,9 +71,9 @@ Age_range <- unlist(minmaxlist[["Age"]])
 Glucose_range <- unlist(minmaxlist[["Glucose"]], use.names = FALSE)
 
 
-# 1. Scatterplot Glucose on Age
+# 1. Scatterplot Glucose vs Age
 
-plot_3_1 <-
+Glucose_vs_Age_scatter <-
   pimatibble |>
   ggplot() +
   aes(x = Age, y = Glucose, color = Diabetes) +
@@ -96,46 +96,61 @@ plot_3_1 <-
 # Diabetes ~ Glucose + Age in a logistic regression model
 # using glm()= with family = "binomial" since target has two levels
 
-logistic_model1 <-
+logistic_model <-
   glm(Diabetes ~ Glucose + Age, data = pimatibble, family = "binomial")
 
-summary(logistic_model1)
+summary(logistic_model)
 
 # coefficients (= coefficients in the probabilistic equation)
 
-logistic_coef1 <- coef(logistic_model1)
+logistic_coef <- coef(logistic_model)
 
-# set classification threshold
-r1 <-  0.5
+theta0 <- logistic_coef["(Intercept)"]
+theta1 <- logistic_coef["Glucose"]
+theta2 <- logistic_coef["Age"]
 
-# adding predicted probabilities and their classification to the data tibble
-pimatibble_with_predictions <-
+# adding predicted probabilities to data
+pimatibble_pred_probs <-
   pimatibble |>
-  mutate(Predicted_prob = predict(logistic_model1, type = "response"),
-         Diabetes_prediction = ifelse(Predicted_prob > r1, TRUE, FALSE),
+  mutate(Predicted_prob = predict(logistic_model, type = "response"))
+
+################################################################################
+# helper function for classifications and plots
+################################################################################
+classifications_and_plots <- function(data_pred_prob, # data + predicted probabilities
+                                theta0, theta1, theta2, # coefficients
+                                r, # classification threshold
+                                glucose_range, age_range # data ranges
+                                ){
+
+# adding prediction classifications to the data tibble
+data_with_predictions <-
+  data_pred_prob |>
+  mutate(Diabetes_prediction = ifelse(Predicted_prob > r, TRUE, FALSE),
          Correct_pred = (Diabetes == Diabetes_prediction))
 
 # confusion matrix
-logistic_confusion1 <-
-  table(Actual = pimatibble_with_predictions$Diabetes,
-        Predicted = pimatibble_with_predictions$Diabetes_prediction)
-logistic_confusion1
+logistic_confusion <-
+  table(Actual = data_with_predictions$Diabetes,
+        Predicted = data_with_predictions$Diabetes_prediction)
 
 # proportion correctly classified observations
-correct_proportion <- sum(diag(logistic_confusion1))/sum(logistic_confusion1)
-correct_proportion
+correct_proportion <-
+  sum(diag(logistic_confusion))/sum(logistic_confusion)
 
 # training misclassification error
 # = proportion of misclassified observations
-training_misclass_error <- 1 - correct_proportion
-# alternatively:
-# training_misclass_error <-
-#   mean(pimatibble$Diabetes_prediction != pimatibble$Diabetes)
-training_misclass_error
+training_misclass_error <-
+  1 - correct_proportion
 
-# scatterplot colored by predictions (re-using minmaxlist)
-plot_3_2 <-
-  pimatibble_with_predictions |>
+# decision boundary line intercept and slope
+
+boundary_intercept <-  (log(r/(1-r))-theta0)/theta1
+boundary_slope <-  -theta2/theta1
+
+# scatterplot colored by predictions
+pred_plot <-
+  data_with_predictions |>
   ggplot() +
   aes(x = Age, y = Glucose, color = Diabetes_prediction) +
   geom_point(size = 1, shape = 8) +
@@ -143,18 +158,18 @@ plot_3_2 <-
   scale_colour_manual(labels = c("Non-diabetic", "Diabetic"),
                       values = c("darkmagenta", "darkorange")) +
   scale_x_continuous(
-    limits = Age_range,
+    limits = age_range,
     breaks = scales::breaks_width(10)) +
   scale_y_continuous(
-    limits = Glucose_range,
+    limits = glucose_range,
     breaks = scales::breaks_width(10),
     expand = expansion(mult = c(0, 0.05))
   ) +
   labs(y = "Plasma glucose", color = "Prediction")
 
-# scatterplot colored by correct or misclassfication (re-using minmaxlist)
-plot_3_2x <-
-  pimatibble_with_predictions |>
+# scatterplot colored by correct or misclassfication
+class_plot <-
+  data_with_predictions |>
   ggplot() +
   aes(x = Age, y = Glucose, color = Correct_pred, shape = Correct_pred) +
   geom_point() +
@@ -170,13 +185,77 @@ plot_3_2x <-
     labels = c(`TRUE` = "Correct", `FALSE` = "Misclassification")
   ) +
   scale_x_continuous(
-    limits = Age_range,,
+    limits = age_range,
     breaks = scales::breaks_width(10)) +
   scale_y_continuous(
-    limits = Glucose_range,
+    limits = glucose_range,
     breaks = scales::breaks_width(10),
     expand = expansion(mult = c(0, 0.05))
   ) +
-  labs(y = "Plasma glucose", color = "Classification result")
+  labs(y = "Plasma glucose", color = "Classification result")+
+  geom_abline(
+    intercept = boundary_intercept,
+    slope = boundary_slope,
+    color = "black",
+    linewidth = 1
+  )
+
+return(list(data_with_predictions = data_with_predictions,
+            confusion_matrix = logistic_confusion,
+            correct_proportion = correct_proportion,
+            training_misclass_error = training_misclass_error,
+            boundary_intercept = boundary_intercept,
+            boundary_slope = boundary_slope,
+            pred_plot = pred_plot,
+            class_plot = class_plot))
+}
 
 
+add_boundary <-  function(results_list){
+  pred_plot_with_line <-
+    results_list[["pred_plot"]] +
+    geom_abline(
+      intercept = results_list[["boundary_intercept"]],
+      slope = results_list[["boundary_slope"]],
+      color = "black",
+      linewidth = 1
+    )
+  class_plot_with_line <-
+    results_list[["class_plot"]] +
+    geom_abline(
+      intercept = results_list[["boundary_intercept"]],
+      slope = results_list[["boundary_slope"]],
+      color = "black",
+      linewidth = 1
+    )
+  return(list(pred_plot_with_line=pred_plot_with_line,
+              class_plot_with_line=class_plot_with_line))
+}
+
+
+
+################################################################################
+
+results_r_05 <-
+  classifications_and_plots(pimatibble_pred_probs,
+                            theta0, theta1, theta2, r = 0.5,
+                            Glucose_range, Age_range)
+
+results_r_02 <-
+  classifications_and_plots(pimatibble_pred_probs,
+                            theta0, theta1, theta2, r = 0.2,
+                            Glucose_range, Age_range)
+
+results_r_08 <-
+  classifications_and_plots(pimatibble_pred_probs,
+                            theta0, theta1, theta2, r = 0.8,
+                            Glucose_range, Age_range)
+
+boundary_05_plots <-
+  add_boundary(results_r_05)
+
+boundary_02_plots <-
+  add_boundary(results_r_02)
+
+boundary_08_plots <-
+  add_boundary(results_r_08)

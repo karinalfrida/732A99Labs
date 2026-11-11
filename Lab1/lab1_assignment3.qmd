@@ -18,14 +18,16 @@ format:
   html:
     toc: true
 execute:
-    echo: true        # change to false in final version
-    warning: true       # change to false in final version
-    message: true       # change to false in final version
+    echo: false        # false in final version
+    warning: true       # false in final version
+    message: true       # false in final version
 ---
 
 # Assignment 3 - Logistic regression and Basis Function Expansion
 
-After reading the 
+Visualization of the data shows that there are values equal to zero in  the measures, including plasma glucose which is one of the predictors of interest in this assignment. `Glucose = 0` is not a feasible value, but rather representing a missing value. All cases (n=5) with plasma glucose equal to zero were excluded from the data before the regression analysis.
+
+
 ## Scatterplot diabetes vs age
 ```{r}
 #| include: false
@@ -35,7 +37,7 @@ source("R/lab1_assignment3.R")
 ```
 
 ```{r}
-plot_3_1
+Glucose_vs_Age_scatter
 ```
 
 Plotting plasma glucose levels vs. age shows that the two response groups, 
@@ -52,7 +54,7 @@ P(Y = 1 \mid \mathbf{x}) = \operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf
 $$ {#eq-logistic}
 where the sigmoid function is
 $$
-\operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathbf{x}}}
+\mathit{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathbf{x}}}
 $${#eq-sigmoid}
 
 For `Diabetes` as the binary target/response (y), and `Glucose` and `Age` as features/predictors (x1, x2):
@@ -60,35 +62,80 @@ For `Diabetes` as the binary target/response (y), and `Glucose` and `Age` as fea
 $$
 P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x_1 + \theta_2 x_2)}}
 $${#eq-logistic-expanded}
-Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the following probabilistic equation
+Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the following coefficients
+
+$$
+\theta_0 = `r round(theta0, 4)`\\
+\theta_1 = `r round(theta1, 4)`\\
+\theta_2 = `r round(theta2, 4)`\\
+$$
+and the corresponding probabilistic equation
 
 $$
 P(Y=1 \mid x_1,x_2) =
 \frac{1}{1 + e^{-(
-`r round(logistic_coef1["(Intercept)"], 4)` +
-`r round(logistic_coef1["Glucose"], 4)`x_1 +
-`r round(logistic_coef1["Age"], 4)`x_2)}}
+`r round(theta0, 4)` +
+`r round(theta1, 4)`x_1 +
+`r round(theta2, 4)`x_2)}}
 $${#eq-logistic-fitted}
 
-The training misclassification error for this model is `r round(training_misclass_error, 2)`.
+The training misclassification error for this model is `r round(results_r_05[["training_misclass_error"]], 2)`.
 
 ## Scatterplot colored by predicions
 ```{r}
-plot_3_2
+results_r_05[["pred_plot"]]
 ```
 
 ## Decision boundary equation
 
-Setting the probabilistic equation @eq-logistic-fitted = r (here = 0.5) 
- gives the decision boundary equation as
+Setting the probabilistic equation in @eq-logistic-fitted equal to `r` (here `= 0.5`) 
+ gives the approximate decision boundary equation as
 $$
-`r round(logistic_coef1["(Intercept)"], 4)` +
-`r round(logistic_coef1["Glucose"], 4)`x_1 +
-`r round(logistic_coef1["Age"], 4)`x_2 = 0
+`r round(theta0, 4)` +
+`r round(theta1, 4)`x_1 +
+`r round(theta2, 4)`x_2 = 0
 $$
-Solving this for `Glucose` gives the (approximate) linear decision boundary line:
+i.e., 
+$$
+`r round(theta0, 4)` +
+`r round(theta1, 4)`Glucose +
+`r round(theta2, 4)`Age = 0
+$$
+
+Solving this for `Glucose` gives the linear decision boundary line
 
 $$
-Glucose = - `r round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2) - round(logistic_coef1["(Intercept)"]/logistic_coef1["Glucose"],2)`
+\mathit{Glucose} = -\frac{\theta_0 + \theta_2 \mathit{Age}}{\theta_1}
+$$ {#eq-glucose}
+
+approximately
+
 $$
-## Scatterplot with decision boundary line
+\mathit{Glucose} = - `r round(theta0/theta1,2)` - `r round(theta2/theta1,2)`Age
+$$
+## Scatterplot with decision boundary line for r = 0.5
+
+```{r}
+boundary_05_plots[["pred_plot_with_line"]]
+```
+
+## Scatterplot with decision boundary line for r = 0.2 and r = 0.8
+
+The equation for the decision boundary line can generically be expressed as 
+
+$$
+x_1 = \frac{\log\left(\frac{r}{1-r}\right) - \theta_0}{\theta_1} - \frac{\theta_2}{\theta_1}x_2
+$$ {#eq-boundary-generic}
+
+which means the intercept changes with r, the slope does not.
+
+With r = 0.2 are more individuals predicted to be diabetic, with r increased to 0.8 instead fewer individuals. The training misclassification errors are `r round(results_r_02[["training_misclass_error"]], 2)` and `r round(results_r_08[["training_misclass_error"]], 2)` resepectively for the 0.2 and 0.8 cases, both higher than for the 0.5 cutoff case.
+
+
+```{r}
+#| layout-ncol: 2
+boundary_02_plots[["pred_plot_with_line"]]
+boundary_08_plots[["pred_plot_with_line"]]
+```
+
+
