@@ -91,8 +91,6 @@ a2_ridge <- function(theta, sigma, lambda) {
 # optim() minimises a function of ONE parameter vector,
 # So theta (16 values) and sigma are packed together
 # as par = c(theta, log(sigma)). One vector.
-# sigma is optimised on the log scale so it always stays positive
-# (sigma = exp(log_sigma) > 0 for any value BFGS tries).
 a2_ridge_opt <- function(lambda) {
   # numeber of paramaters
   p <- ncol(a2_X_train)
