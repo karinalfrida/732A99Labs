@@ -1,0 +1,65 @@
+---
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: labreport1_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3 # change to 2 if preferable
+    geometry:
+      - margin=2.5cm # symmetrical
+  docx: default 
+  html:
+    toc: true
+execute:
+    echo: true        # change to false in final version
+    warning: true       # change to false in final version
+    message: true       # change to false in final version
+---
+
+\makereportfrontpage
+
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+```{r run-source-files}
+#| include: false
+# source("R/01_1.R")
+
+```
+
+\justifying
+
+# Assignment 1
+ <!-- {{< include sections/lab1_assignment1.qmd >}} -->
+
+
+\clearpage
+# Assignment 2
+<!--  {{< include sections/lab1_assignment2.qmd >}} -->
+
+\clearpage
+# Assignment 3
+<!-- {{< include sections/lab1_assignment3.qmd >}} -->
+
+\clearpage
+# Theory
+<!-- {{< include sections/lab1_theory.qmd >}} -->
+
+\clearpage
+
+<!-- # References -->
+
+<!-- ::: {#refs} -->
+<!-- ::: -->
+<!-- {{< include sections/lab1_code_appendix.qmd >}} -->
+
+
