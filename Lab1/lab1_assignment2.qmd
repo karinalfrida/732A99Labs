@@ -11,40 +11,110 @@ format:
     lot: false
     lof: false
     number-sections: true
-    number-depth: 3 # change to 2 if preferable
+    number-depth: 3
     geometry:
-      - margin=2.5cm # symmetrical
+      - margin=2.5cm
   docx: default
   html:
     toc: true
 execute:
-    echo: true        # change to false in final version
-    warning: true       # change to false in final version
-    message: true       # change to false in final version
+  echo: false
+  warning: false
+  message: false
 ---
 
 # Assignment 2 - Linear regression and ridge regression
 
 ```{r}
 #| include: false
-#| echo: false
-
+# R-script import
 source("R/lab1_assignment2.R")
+
+# Values used in the report below
+## fixing name formating (removing backtick formating from factors)
+a2_significant_names <- gsub("`", "", a2_lm_signif, fixed = TRUE)
+
+## significant coef print
+a2_significance_sentence <- paste0(
+  length(a2_significant_names),
+  " coefficients were significant at the 5% level: ",
+  paste(a2_significant_names, collapse = ", "), "."
+)
+
+# print values
+a2_sigma_mle <- sqrt(mean(residuals(a2_lm)^2))
+a2_best_idx <- which.min(a2_ridge_results$test_mse)
+a2_best_lambda <- a2_ridge_results$lambda[a2_best_idx]
+a2_best_test_mse <- a2_ridge_results$test_mse[a2_best_idx]
+
+# Final comparision table
+a2_comparison <- rbind(
+  data.frame(
+    Model = "OLS",
+    `Training MSE` = a2_lm_train_mse,
+    `Test MSE` = a2_lm_test_mse,
+    `Effective df` = ncol(a2_X_train),
+    `Sigma` = a2_sigma_mle,
+    check.names = FALSE
+  ),
+  data.frame(
+    Model = paste0("Ridge (lambda = ", a2_ridge_results$lambda, ")"),
+    `Training MSE` = a2_ridge_results$train_mse,
+    `Test MSE` = a2_ridge_results$test_mse,
+    `Effective df` = a2_ridge_results$df,
+    `Sigma` = a2_ridge_results$sigma,
+    check.names = FALSE
+  )
+)
 ```
 
-## Data partitioning and scaling
+## Data and ordinary linear regression
 
-<!-- How the data was split (60/40) and scaled, and why. -->
+We predicted motor UPDRS from 16 voice characteristics in the Parkinson's dataset. The data were randomly divided into `r nrow(a2_train)` training observations (60%) and `r nrow(a2_test)` test observations (40%), using `set.seed(12345)`. Both the predictors and response were standardized using the *training-set* means and standard deviations, and the same transformation was applied to the test set. Consequently, the models were fitted without an intercept.
 
-## Linear regression
+The ordinary least squares (OLS) model had training MSE `r sprintf("%.4f", a2_lm_train_mse)` and test MSE `r sprintf("%.4f", a2_lm_test_mse)` (on the standardized response scale). `r a2_significance_sentence`
 
-<!-- Training and test MSE. Which variables contribute significantly? -->
+## Likelihood, Ridge objective and degrees of freedom
 
-## Log-likelihood, ridge and degrees of freedom functions
+We assumed Normaly distrobuted errors and that `motor_UPDRS` is normally distributed around the value predicted by the regression model. Based on these assumption, we construct the log-likelihood used in Ridge regression.
 
-<!-- Short description of each function (3a-3d), with equations if useful. -->
+$$
+Y_i\mid \mathbf{x}_i \sim N(\mathbf{x}_i^\top\boldsymbol\theta,\sigma^2),
+\qquad
+\ell(\boldsymbol\theta,\sigma)
+=-\frac{n}{2}\log(2\pi\sigma^2)
+-\frac{1}{2\sigma^2}\sum_{i=1}^{n}
+(y_i-\mathbf{x}_i^\top\boldsymbol\theta)^2.
+$$
 
-## Ridge regression for different penalties
+The implemented `Ridge` function evaluates the negative log-likelihood with an L2 penalty:
 
-<!-- Training/test MSE and degrees of freedom for lambda = 1, 100, 1000.
-     Which lambda is most appropriate? Conclusions from the degrees of freedom. -->
+$$
+J(\boldsymbol\theta,\sigma;\lambda)
+=-\ell(\boldsymbol\theta,\sigma)
++\lambda\sum_{j=1}^{16}\theta_j^2.
+$$
+
+For each fixed $\lambda$, `RidgeOpt` minimizes this objective using `optim(method = "BFGS")`, jointly estimating the coefficients and $\sigma$. We optimized $\log\sigma$ instead of $\sigma$. This insure $\sigma>0$, as we can not have a negative variance.
+
+Following Lecture 1d (slides 17 and 22), the `DF` function uses the trace of the Ridge smoother matrix to measure effective model complexity:
+
+$$
+\operatorname{df}(\lambda)
+=\operatorname{tr}\!\left[
+X(X^\top X+\lambda I)^{-1}X^\top
+\right].
+$$
+
+## Comparison of penalty strengths
+
+The estimated optimal coefficients were used to predict responses by $\hat{\mathbf y}=X\hat{\boldsymbol\theta}$. Table @tbl-a2-models compares the training and test MSE and the effective degrees of freedom for the three specified penalty strengths.
+
+```{r}
+#| label: tbl-a2-models
+#| tbl-cap: "OLS and Ridge results. MSE values are on the standardized response scale."
+knitr::kable(a2_comparison, digits = 4, row.names = FALSE)
+```
+
+Among the specified penalties, $\lambda = `r a2_best_lambda`$ produced the lowest test MSE (`r sprintf("%.4f", a2_best_test_mse)`), compared with `r sprintf("%.4f", a2_lm_test_mse)` for OLS. The lecture-defined effective degrees of freedom decreased from `r sprintf("%.2f", a2_ridge_results$df[1])` at $\lambda=1$ to `r sprintf("%.2f", tail(a2_ridge_results$df, 1))` at $\lambda=1000$. Thus, stronger regularization reduced the model's effective flexibility, although all 16 coefficients remained in the model. The test MSE indicates which of these penalty strengths gave the best predictive performance on the held-out data.
+
