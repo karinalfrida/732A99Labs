@@ -42,8 +42,8 @@ library(patchwork)
 
 
 \clearpage
-# Assignment 2
-<!--  {{< include sections/lab1_assignment2.qmd >}} -->
+# Assignment 2 - Linear regression and ridge regression
+{{< include sections/lab1_assignment2.qmd >}}
 
 \clearpage
 # Assignment 3 - Logistic regression and Basis Function Expansion
@@ -71,6 +71,11 @@ library(patchwork)
 
 ## Assignment 2
 
+```{r}
+#| file: R/lab1_assignment2.R
+#| echo: true
+#| eval: false
+```
 
 ## Assignment 3
 
