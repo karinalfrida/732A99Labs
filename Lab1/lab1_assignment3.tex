@@ -66,46 +66,6 @@
 \fi
 \makeatother
 
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{241,243,245}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
-\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
 
 \usepackage{longtable,booktabs,array}
 \newcounter{none} % for unnumbered tables
@@ -233,14 +193,14 @@
 {\Huge Lab Report \par}
 
 
-\vspace{4cm}
+\vspace{2cm}
 
 {\normalsize Jonas Danielsson \\ jonda228 \par}
 {\normalsize Jonas Hautamäki Bengtsson \\ jonha849 \par}
 {\normalsize Kerstin Arbring \\ kerar739 \par}
-\vspace{2cm}
+\vspace{3cm}
 
-\includegraphics[scale=0.75]{liu_logga.png}
+\includegraphics[scale=2]{liu_logga.png}
 
 \vfill
 
@@ -325,74 +285,208 @@ Linköping University\\
 \section{Assignment 3 - Logistic regression and Basis Function
 Expansion}\label{assignment-3---logistic-regression-and-basis-function-expansion}
 
+Visualization of the data shows that there are values equal to zero in
+the measures, including plasma glucose which is one of the predictors of
+interest in this assignment. \texttt{Glucose\ =\ 0} is not a feasible
+value, but rather representing a missing value. All cases (n=5) with
+plasma glucose equal to zero were excluded from the data before the
+regression analysis.
+
 \subsection{Scatterplot diabetes vs
 age}\label{scatterplot-diabetes-vs-age}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{plot\_3\_1}
-\end{Highlighting}
-\end{Shaded}
+\begin{figure}
 
-\pandocbounded{\includegraphics[keepaspectratio]{lab1_assignment3_files/figure-pdf/unnamed-chunk-2-1.pdf}}
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{lab1_assignment3_files/figure-pdf/fig-scatter-glucose-age-1.pdf}
+
+}
+
+\caption{\label{fig-scatter-glucose-age}Plasma glucose levels in
+relation to age. Blue dots represent non-diabetic subjects, the pink
+dots diabetic subjects.}
+
+\end{figure}%
 
 Plotting plasma glucose levels vs.~age shows that the two response
-groups, \texttt{Non-diabetic} and \texttt{Diabetic}, show a substantial
+groups, \emph{Non-diabetic} and \emph{Diabetic}, show a substantial
 overlap. \texttt{Diabetes} would therefore not be easily predicted by
-\texttt{Age} and \texttt{Glucose} in a standard logistic regression
-model which would not be able to derive a straight line clearly
-separating the groups.
+\emph{Age} and \emph{Glucose} in a standard logistic regression model
+which would not be able to derive a straight line clearly separating the
+groups.
 
 \subsection{Logistic regression model}\label{logistic-regression-model}
 
 The vector form of the probailistic equation for a logistic regression
 model is \begin{equation}\protect\phantomsection\label{eq-logistic}{
-P(Y = 1 \mid \mathbf{x}) = \operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x})
+P(Y = 1 \mid \mathit{x}) = \operatorname{sigmoid}(\boldsymbol{\%theta}^{T}\mathit{x})
 }\end{equation} where the sigmoid function is
 \begin{equation}\protect\phantomsection\label{eq-sigmoid}{
-\operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathbf{x}}}
+\mathit{sigmoid}(\boldsymbol{\theta}^{T}\mathit{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathit{x}}}
 }\end{equation}
 
-For \texttt{Diabetes} as the binary target/response (y), and
-\texttt{Glucose} and \texttt{Age} as features/predictors (x1, x2):
+For \emph{Diabetes} as the binary target/response (y), and
+\emph{Glucose} and \emph{Age} as features/predictors (x1, x2):
 
 \begin{equation}\protect\phantomsection\label{eq-logistic-expanded}{
-P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x_1 + \theta_2 x_2)}}
+P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 \cdot x_1 + \theta_2 \cdot x_2)}}
 }\end{equation} Training a logistic regression model on the (entire)
-provided data set, using glm() in R, results in the following
-probabilistic equation
+provided data set, using glm() in R, results in the coefficients
+\(\theta_0 = -6.2252\), \(\theta_1 = 0.0384\), and
+\(\theta_2 = 0.0231\), all with significant p values, and the
+corresponding probabilistic equation is then
 
 \begin{equation}\protect\phantomsection\label{eq-logistic-fitted}{
 P(Y=1 \mid x_1,x_2) =
 \frac{1}{1 + e^{-(
--5.8979 +
-0.0356x_1 +
-0.0245x_2)}}
+-6.2252 +
+0.0384x_1 +
+0.0231x_2)}}
 }\end{equation}
 
-The training misclassification error for this model is 0.27.
+The training misclassification error for this model (with r = 0.5) is
+0.26, i.e approximately one out of four observations are misclassified.
 
-\subsection{Scatterplot of predicted
-values}\label{scatterplot-of-predicted-values}
+\subsection{Scatterplot colored by
+predicions}\label{scatterplot-colored-by-predicions}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{plot\_3\_2}
-\end{Highlighting}
-\end{Shaded}
+\begin{figure}
 
-\pandocbounded{\includegraphics[keepaspectratio]{lab1_assignment3_files/figure-pdf/unnamed-chunk-3-1.pdf}}
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{lab1_assignment3_files/figure-pdf/fig-scatter-glucose-age-predictions-1.pdf}
+
+}
+
+\caption{\label{fig-scatter-glucose-age-predictions}Plasma glucose
+levels in relation to age. Purple stars represent subjects predicted to
+be non-diabetic, the orange stars subjects predicted to be diabetic.}
+
+\end{figure}%
+
+Comparing the predicted diabetes classifications to the actual diabetes
+status as shown in Figure~\ref{fig-scatter-glucose-age} it looks like
+there will be some misclassifications, possibly more so for subjects in
+the lower, middle part of the scatter, where diabetic an non-diabetic
+subjects are overlapping, and for the non-diabetic elderly subjects.
 
 \subsection{Decision boundary
 equation}\label{decision-boundary-equation}
 
-Setting the probabilistic equation Equation~\ref{eq-logistic-fitted} = r
-(here = 0.5) and solving this gives the linear decision boundary
-equation as \[
--5.8979 +
-0.0356x_1 +
-0.0245x_2)
-\]
+Setting the probabilistic equation in Equation~\ref{eq-logistic-fitted}
+equal to \texttt{r} (here \texttt{=\ 0.5}) results in this approximate
+decision boundary equation, with the fitted coefficients and \emph{x1 =
+Glucose} and \emph{x2 = Age} :
+
+\begin{equation}\protect\phantomsection\label{eq-dbeq}{
+-6.2252 +
+0.0384\cdot Glucose +
+0.0231\cdot Age = 0
+}\end{equation}
+
+Solving this for \emph{Glucose} gives the approximate linear decision
+boundary line
+
+\begin{equation}\protect\phantomsection\label{eq-dbeq-glucose-solved}{
+\mathit{Glucose} = 161.97 -0.6\cdot Age
+}\end{equation}
+
+\clearpage
+
+\subsection{Scatterplot with decision boundary line for r =
+0.5}\label{scatterplot-with-decision-boundary-line-for-r-0.5}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{lab1_assignment3_files/figure-pdf/fig-scatter-glucose-age-predictions-r05-line-1.pdf}
+
+}
+
+\caption{\label{fig-scatter-glucose-age-predictions-r05-line}Predicted
+diabetes classifications with threshold r = 0.5. The added black line is
+the decision boundary line.}
+
+\end{figure}%
+
+The boundary line means that there will likely be misclassifications
+both ways in the mixed ``middle'' group. The elderly non-diabetics will
+risk being misclassified as diabetic according to the negative slope of
+the linear boundary imposing increasingly harder restrictions on
+acceptable plasma glucose level for a non-diabetic subject.
+
+\subsection{Scatterplot with decision boundary line for r = 0.2 and r =
+0.8}\label{scatterplot-with-decision-boundary-line-for-r-0.2-and-r-0.8}
+
+The equation for the linear decision boundary line for two
+predictors/features can generically be expressed as
+
+\begin{equation}\protect\phantomsection\label{eq-linear-boundary-generic}{
+x_1 = \frac{\log\left(\frac{r}{1-r}\right) - \theta_0}{\theta_1} - \frac{\theta_2}{\theta_1}x_2
+}\end{equation}
+
+which means the intercept changes with r, the slope does not.
+
+With r = 0.2 are more individuals predicted to be diabetic, with r
+increased to 0.8 instead fewer individuals. The training
+misclassification errors are 0.36 and 0.31 resepectively for the 0.2 and
+0.8 cases, both higher than for the 0.5 cutoff case.
+
+\begin{figure}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_assignment3_files/figure-pdf/fig-diabetes-thresholds-pw-1.pdf}}
+
+}
+
+\caption{\label{fig-diabetes-thresholds-pw}Predicted diabetes
+classifications for thresholds r = 0.2 (left) and r = 0.8 (right). Black
+lines indicate the decision boundaries.}
+
+\end{figure}%
+
+\subsection{Basis function expansion}\label{basis-function-expansion}
+
+Fitting a new logistic regression model after adding new features
+
+\[
+z_1 = x_1^4, \quad
+z_2 = x_1^3 x_2, \quad
+z_3 = x_1^2 x_2^2, \quad
+z_4 = x_1 x_2^3, \quad
+z_5 = x_2^4
+\] results in a much more complex model but a training misclassification
+error (with r = 0.5) of 0.24 which is slightly better than the linear
+model. The decision boundary is now not linear but curvilinear, changing
+the appearance of the Glucose vs Age scatterplot (see
+Figure~\ref{fig-extended-scatter}). The most obvious difference from the
+previous model is that older subjects are ``allowed'' to have higher
+plasma glucose levels without being predicted to be diabetic, which is a
+pattern that can be discerned also in the actual data.
+
+The \emph{theta3} to \emph{theta7} coefficients (for the \emph{z1} to
+\emph{z5} terms) are very small (magnitude \$10\^{}\{-7\} or less), and
+individually non-significant (p values above 0.6), but they are
+multiplied with numerically high values for \emph{Glucose} (raised to up
+to 4) in the polynomial, and the AIC reduction suggests an improved
+overall fit for the model.
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{lab1_assignment3_files/figure-pdf/fig-extended-scatter-1.pdf}
+
+}
+
+\caption{\label{fig-extended-scatter}Predicted diabetes classifications
+for the extended logistic regression model with polynomial basis
+function expansion.}
+
+\end{figure}%
 
 
 

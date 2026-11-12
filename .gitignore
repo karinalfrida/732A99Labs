@@ -3,3 +3,19 @@
 .RData
 .Ruserdata
 .DS_Store
+
+# LaTeX temporary files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Quarto-generated LaTeX
+labreport.tex
+lab1_assignment3.tex
+
+# Quarto-generated figure directories
+*_files/
