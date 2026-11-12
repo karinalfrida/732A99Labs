@@ -26,11 +26,12 @@ if (anyNA(A3_pimadata)) {
 A3_pimatibble_raw <-
   A3_pimadata |>
   tibble() |>
-  magrittr::set_colnames(c("Parity", "Glucose", "DBP", "Skinfold", "Insulin",
-                         "BMI", "Pedigree", "Age", "Diabetes")) |>
+  magrittr::set_colnames(c("Parity", "Glucose", "DBP", "Skinfold",
+                           "Insulin","BMI", "Pedigree", "Age", "Diabetes")) |>
   mutate(Diabetes = as.logical(Diabetes)) |>
   mutate(ID = row_number(), .before = Parity) |>
-  select(ID, Age, Pedigree, Parity, BMI, Skinfold, DBP, Insulin, Glucose, Diabetes)
+  select(ID, Age, Pedigree, Parity, BMI, Skinfold,
+         DBP, Insulin, Glucose, Diabetes)
 
 # data check
   A3_pimatibble_raw |>

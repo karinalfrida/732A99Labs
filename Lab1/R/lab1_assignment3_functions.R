@@ -28,10 +28,8 @@
 #' class_plot
 #'    = Plot of Glucose vs Age, colored by Correct_pred
 #'
-A3_classifications_and_plots <- function(data_pred_prob, # data + predicted probabilities
-                                         r, # classification threshold
-                                         glucose_range, age_range # data ranges
-){
+A3_classifications_and_plots <-
+  function(data_pred_prob, r, glucose_range, age_range){
 
   # adding prediction classifications to the data tibble
   data_with_predictions <-
