@@ -4,7 +4,7 @@ lang: en
 format:
   pdf:
     documentclass: article
-    include-in-header: labreport_preamble.tex
+    include-in-header: labreport1_preamble.tex
     pdf-engine: xelatex
     keep-tex: true
     toc: false
