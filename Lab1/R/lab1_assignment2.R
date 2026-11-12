@@ -1,6 +1,6 @@
 # Lab 1, Assignment 2 - Linear regression and ridge regression
 #
-# Sourced by lab1_assignment2.qmd. Paths are relative to Lab1/.
+# Sourced by sections/lab1_assignment2.qmd. Paths are relative to Lab1/.
 # Prefix objects with a2_ so they don't clash with other assignments'
 # scripts when everything is sourced into the combined report.
 
@@ -158,3 +158,41 @@ a2_ridge_results <- data.frame(
 # coefficients side by side -- linear regression and ridge per lambda
 a2_ridge_coefs <- cbind(lm = coef(a2_lm),
                         sapply(a2_ridge_fits, \(f) f$theta))
+
+# Values used in report -------------------------------------------------
+
+## fixing name formating (removing backtick formating from factors)
+a2_significant_names <- gsub("`", "", a2_lm_signif, fixed = TRUE)
+
+## significant coef print
+a2_significance_sentence <- paste0(
+  length(a2_significant_names),
+  " coefficients were significant at the 5% level: ",
+  paste(a2_significant_names, collapse = ", "), "."
+)
+
+# print values
+a2_sigma_mle <- sqrt(mean(residuals(a2_lm)^2))
+a2_best_idx <- which.min(a2_ridge_results$test_mse)
+a2_best_lambda <- a2_ridge_results$lambda[a2_best_idx]
+a2_best_test_mse <- a2_ridge_results$test_mse[a2_best_idx]
+
+# Final comparision table
+a2_comparison <- rbind(
+  data.frame(
+    Model = "OLS",
+    `Training MSE` = a2_lm_train_mse,
+    `Test MSE` = a2_lm_test_mse,
+    `Effective df` = ncol(a2_X_train),
+    `Sigma` = a2_sigma_mle,
+    check.names = FALSE
+  ),
+  data.frame(
+    Model = paste0("Ridge (lambda = ", a2_ridge_results$lambda, ")"),
+    `Training MSE` = a2_ridge_results$train_mse,
+    `Test MSE` = a2_ridge_results$test_mse,
+    `Effective df` = a2_ridge_results$df,
+    `Sigma` = a2_ridge_results$sigma,
+    check.names = FALSE
+  )
+)
