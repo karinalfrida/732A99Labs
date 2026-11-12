@@ -54,7 +54,7 @@ a2_lm_coefs <- as.data.frame(a2_lm_summary$coefficients)
 a2_lm_signif <- rownames(a2_lm_coefs)[a2_lm_coefs[, "Pr(>|t|)"] < 0.05]
 
 # MSE = mean squared diff between observed and predicted values
-## MSE function
+## Created MSE function (There DO exist package functions for MSE)
 a2_mse <- function(y, y_hat) mean((y - y_hat)^2)
 
 ## Calculating MSE
@@ -88,9 +88,9 @@ a2_ridge <- function(theta, sigma, lambda) {
 
 # 3c. optimal theta and sigma for a given lambda, using optim(method = "BFGS")
 #
-# optim() minimises a function of ONE parameter vector,
-# So theta (16 values) and sigma are packed together
-# as par = c(theta, log(sigma)). One vector.
+# optim() minimises a function of ONE parameter vector (in this case 'par'),
+# so theta (16 values) and sigma are packed together:
+# AKA par = c(theta, log(sigma)). One vector.
 a2_ridge_opt <- function(lambda) {
   # numeber of paramaters
   p <- ncol(a2_X_train)
@@ -133,6 +133,28 @@ a2_df <- function(lambda) {
 
 # 4. Ridge for lambda = 1, 100, 1000 ------------------------------------------
 
-# TODO: optimal parameters for each lambda
-# TODO: training and test MSE for each lambda
-# TODO: degrees of freedom for each lambda
+a2_lambdas <- c(1, 100, 1000)
+
+# test data as matrix, same column order as a2_X_train
+a2_X_test <- as.matrix(a2_test[, a2_voice_vars])
+a2_y_test <- a2_test$motor_UPDRS
+
+# optimal theta and sigma for each lambda (using ridge_opt (from 3c) per lambda)
+a2_ridge_fits <- lapply(a2_lambdas, a2_ridge_opt)
+names(a2_ridge_fits) <- paste0("lambda_", a2_lambdas)
+
+# predictions are X %*% theta (optimal theta from ridge_opt) (no intercept),
+# then MSE, df and sigma per lambda
+a2_ridge_results <- data.frame(
+  lambda      = a2_lambdas,
+  train_mse   = sapply(a2_ridge_fits, \(f) a2_mse(a2_y_train, a2_X_train %*% f$theta)),
+  test_mse    = sapply(a2_ridge_fits, \(f) a2_mse(a2_y_test,  a2_X_test  %*% f$theta)),
+  df          = sapply(a2_lambdas, a2_df),
+  sigma       = sapply(a2_ridge_fits, \(f) f$sigma),
+  convergence = sapply(a2_ridge_fits, \(f) f$convergence),  # 0 = converged
+  row.names   = NULL
+)
+
+# coefficients side by side -- linear regression and ridge per lambda
+a2_ridge_coefs <- cbind(lm = coef(a2_lm),
+                        sapply(a2_ridge_fits, \(f) f$theta))
