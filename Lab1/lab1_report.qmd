@@ -1,0 +1,100 @@
+---
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: lab1_report_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: true
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3 # change to 2 if preferable
+    geometry:
+      - margin=2.5cm # symmetrical
+  docx: default 
+  html:
+    toc: true
+execute:
+    echo: false          # (false in final version)
+    warning: false       # (false in final version)
+    message: fasle       # (false in final version)
+---
+\makereportfrontpage
+
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+```{r packages}
+#| include: false
+library(tidyverse)
+library(patchwork)
+```
+
+\justifying
+
+# Assignment 1
+ <!-- {{< include sections/lab1_assignment1.qmd>}} -->
+
+
+\clearpage
+# Assignment 2 - Linear regression and ridge regression
+{{< include sections/lab1_assignment2.qmd >}}
+
+\clearpage
+# Assignment 3 - Logistic regression and Basis Function Expansion
+{{< include sections/lab1_assignment3.qmd >}}
+
+\clearpage
+# Theory
+<!-- {{< include sections/lab1_theory.qmd >}} -->
+
+\clearpage
+
+<!-- # References -->
+
+<!-- ::: {#refs} -->
+<!-- ::: -->
+
+\clearpage
+
+<!-- Appendix -->
+\appendix
+# R code
+
+## Assignment 1
+
+
+## Assignment 2
+
+```{r}
+#| file: R/lab1_assignment2.R
+#| echo: true
+#| eval: false
+```
+
+## Assignment 3
+
+### Assignment 3 — Functions
+
+```{r}
+#| file: R/lab1_assignment3_functions.R
+#| echo: true
+#| eval: false
+```
+
+### Assignment 3 — Main script
+
+```{r}
+#| file: R/lab1_assignment3.R
+#| echo: true
+#| eval: false
+```
+
+
+
+

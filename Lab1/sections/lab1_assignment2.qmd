@@ -1,29 +1,4 @@
----
-fontsize: 11pt
-lang: en
-format:
-  pdf:
-    documentclass: article
-    include-in-header: labreport1_preamble.tex
-    pdf-engine: xelatex
-    keep-tex: true
-    toc: false
-    lot: false
-    lof: false
-    number-sections: true
-    number-depth: 3
-    geometry:
-      - margin=2.5cm
-  docx: default
-  html:
-    toc: true
-execute:
-  echo: false
-  warning: false
-  message: false
----
-
-# Assignment 2 - Linear regression and ridge regression
+<!-- Assignment 2 -->
 
 ```{r}
 #| include: false

@@ -1,35 +1,6 @@
----
-fontsize: 11pt
-lang: en
-format:
-  pdf:
-    documentclass: article
-    include-in-header: labreport1_preamble.tex
-    pdf-engine: xelatex
-    keep-tex: true
-    toc: false
-    lot: false
-    lof: false
-    number-sections: true
-    number-depth: 3 # change to 2 if preferable
-    geometry:
-      - margin=2.5cm # symmetrical
-  docx: default 
-  html:
-    toc: true
-execute:
-    echo: false        # false in final version
-    warning: false       # false in final version
-    message: false       # false in final version
----
-```{r}
-library(tidyverse)
-library(patchwork)
-```
+<!-- Assignment 3 -->
 
-# Assignment 3 - Logistic regression and Basis Function Expansion
-
-Visualization of the data shows that there are values equal to zero in  the measures, including plasma glucose which is one of the predictors of interest in this assignment. `Glucose = 0` is not a feasible value, but rather representing a missing value. All cases (n=5) with plasma glucose equal to zero were excluded from the data before the regression analysis.
+Visualization of the data shows that there are values equal to zero in the measures, including plasma glucose which is one of the predictors of interest in this assignment. `Glucose = 0` is not a feasible value, but rather representing a missing value. All cases (n=5) with plasma glucose equal to zero were excluded from the data before the regression analysis.
 
 
 ## Scatterplot diabetes vs age
@@ -60,7 +31,7 @@ a straight line clearly separating the groups.
 
 The vector form of the probailistic equation for a logistic regression model is
 $$
-P(Y = 1 \mid \mathit{x}) = \operatorname{sigmoid}(\boldsymbol{\%theta}^{T}\mathit{x})
+P(Y = 1 \mid \mathit{x}) = \operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathit{x})
 $$ {#eq-logistic}
 where the sigmoid function is
 $$
