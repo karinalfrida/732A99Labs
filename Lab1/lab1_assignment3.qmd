@@ -19,9 +19,13 @@ format:
     toc: true
 execute:
     echo: false        # false in final version
-    warning: true       # false in final version
-    message: true       # false in final version
+    warning: false       # false in final version
+    message: false       # false in final version
 ---
+```{r}
+library(tidyverse)
+library(patchwork)
+```
 
 # Assignment 3 - Logistic regression and Basis Function Expansion
 
@@ -32,17 +36,23 @@ Visualization of the data shows that there are values equal to zero in  the meas
 ```{r}
 #| include: false
 #| echo: false 
-
-source("R/lab1_assignment3.R")
+source("R/lab1_assignment3.R") # imports functions from seperate file in addition
 ```
 
 ```{r}
-Glucose_vs_Age_scatter
+#| label: fig-scatter-glucose-age
+#| fig-cap: "Plasma glucose levels in relation to age. Blue dots represent non-diabetic subjects, the pink dots diabetic subjects."
+#| fig-height: 3
+#| fig-width: 4
+#| out-width: "60%"
+#| fig-align: center
+
+A3_Glucose_vs_Age_scatter
 ```
 
 Plotting plasma glucose levels vs. age shows that the two response groups, 
-`Non-diabetic` and `Diabetic`, show a substantial overlap. 
-`Diabetes` would therefore not be easily predicted by `Age` and `Glucose`
+*Non-diabetic* and *Diabetic*, show a substantial overlap. 
+`Diabetes` would therefore not be easily predicted by *Age* and *Glucose*
 in a standard logistic regression model which would not be able to derive 
 a straight line clearly separating the groups.
 
@@ -50,92 +60,131 @@ a straight line clearly separating the groups.
 
 The vector form of the probailistic equation for a logistic regression model is
 $$
-P(Y = 1 \mid \mathbf{x}) = \operatorname{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x})
+P(Y = 1 \mid \mathit{x}) = \operatorname{sigmoid}(\boldsymbol{\%theta}^{T}\mathit{x})
 $$ {#eq-logistic}
 where the sigmoid function is
 $$
-\mathit{sigmoid}(\boldsymbol{\theta}^{T}\mathbf{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathbf{x}}}
+\mathit{sigmoid}(\boldsymbol{\theta}^{T}\mathit{x}) = \frac{1}{1 + e^{-\boldsymbol{\theta}^{T}\mathit{x}}}
 $${#eq-sigmoid}
 
-For `Diabetes` as the binary target/response (y), and `Glucose` and `Age` as features/predictors (x1, x2):
+For *Diabetes* as the binary target/response (y), and *Glucose* and *Age* as features/predictors (x1, x2):
 
 $$
-P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 x_1 + \theta_2 x_2)}}
+P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 \cdot x_1 + \theta_2 \cdot x_2)}}
 $${#eq-logistic-expanded}
-Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the following coefficients
-
-$$
-\theta_0 = `r round(theta0, 4)`\\
-\theta_1 = `r round(theta1, 4)`\\
-\theta_2 = `r round(theta2, 4)`\\
-$$
-and the corresponding probabilistic equation
+Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the coefficients $\theta_0 = `r round(A3_theta0, 4)`$, $\theta_1 = `r round(A3_theta1, 4)`$, and $\theta_2 = `r round(A3_theta2, 4)`$, all with significant p values,  and the corresponding probabilistic equation is then
 
 $$
 P(Y=1 \mid x_1,x_2) =
 \frac{1}{1 + e^{-(
-`r round(theta0, 4)` +
-`r round(theta1, 4)`x_1 +
-`r round(theta2, 4)`x_2)}}
+`r round(A3_theta0, 4)` +
+`r round(A3_theta1, 4)`x_1 +
+`r round(A3_theta2, 4)`x_2)}}
 $${#eq-logistic-fitted}
 
-The training misclassification error for this model is `r round(results_r_05[["training_misclass_error"]], 2)`.
+The training misclassification error for this model (with r = 0.5) is `r round(A3_results_r_05[["training_misclass_error"]], 2)`, i.e approximately one out of four observations are misclassified.
 
 ## Scatterplot colored by predicions
 ```{r}
-results_r_05[["pred_plot"]]
+#| label: fig-scatter-glucose-age-predictions
+#| fig-cap: "Plasma glucose levels in relation to age. Purple stars represent subjects predicted to be non-diabetic, the orange stars subjects predicted to be diabetic."
+#| fig-width: 4
+#| fig-height: 3
+#| out-width: "60%"
+#| fig-align: center
+A3_results_r_05[["pred_plot"]]
 ```
+
+Comparing the predicted diabetes classifications to the actual diabetes status as shown in @fig-scatter-glucose-age it looks like there will be some misclassifications, possibly more so for subjects in the lower, middle part of the scatter, where diabetic an non-diabetic subjects are overlapping, and for the non-diabetic elderly subjects.
 
 ## Decision boundary equation
 
 Setting the probabilistic equation in @eq-logistic-fitted equal to `r` (here `= 0.5`) 
- gives the approximate decision boundary equation as
-$$
-`r round(theta0, 4)` +
-`r round(theta1, 4)`x_1 +
-`r round(theta2, 4)`x_2 = 0
-$$
-i.e., 
-$$
-`r round(theta0, 4)` +
-`r round(theta1, 4)`Glucose +
-`r round(theta2, 4)`Age = 0
-$$
-
-Solving this for `Glucose` gives the linear decision boundary line
+ results in this approximate decision boundary equation, with the fitted coefficients and *x1 = Glucose* and *x2 = Age* :
 
 $$
-\mathit{Glucose} = -\frac{\theta_0 + \theta_2 \mathit{Age}}{\theta_1}
-$$ {#eq-glucose}
+`r round(A3_theta0, 4)` +
+`r round(A3_theta1, 4)`\cdot Glucose +
+`r round(A3_theta2, 4)`\cdot Age = 0
+$$ {#eq-dbeq}
 
-approximately
+Solving this for *Glucose* gives the approximate linear decision boundary line
 
 $$
-\mathit{Glucose} = - `r round(theta0/theta1,2)` - `r round(theta2/theta1,2)`Age
-$$
+\mathit{Glucose} = `r round(-A3_theta0/A3_theta1,2)` `r - round(A3_theta2/A3_theta1,2)`\cdot Age
+$$ {#eq-dbeq-glucose-solved}
+
+\clearpage
+
 ## Scatterplot with decision boundary line for r = 0.5
 
 ```{r}
-boundary_05_plots[["pred_plot_with_line"]]
+#| label: fig-scatter-glucose-age-predictions-r05-line
+#| fig-cap: "Predicted diabetes classifications with threshold r = 0.5.  The added black line is the decision boundary line."
+#| fig-width: 4
+#| fig-height: 3
+#| out-width: "60%"
+#| fig-align: center
+#| fig-pos: 'H'
+A3_boundary_05_plots[["pred_plot_with_line"]]
 ```
+
+The boundary line means that there will likely be misclassifications both ways in the mixed "middle" group. The elderly non-diabetics will risk being misclassified as diabetic according to the negative slope of the linear boundary imposing increasingly harder restrictions on acceptable plasma glucose level for a non-diabetic subject.
 
 ## Scatterplot with decision boundary line for r = 0.2 and r = 0.8
 
-The equation for the decision boundary line can generically be expressed as 
+The equation for the linear decision boundary line for two predictors/features can generically be expressed as 
 
 $$
 x_1 = \frac{\log\left(\frac{r}{1-r}\right) - \theta_0}{\theta_1} - \frac{\theta_2}{\theta_1}x_2
-$$ {#eq-boundary-generic}
+$$ {#eq-linear-boundary-generic}
 
 which means the intercept changes with r, the slope does not.
 
-With r = 0.2 are more individuals predicted to be diabetic, with r increased to 0.8 instead fewer individuals. The training misclassification errors are `r round(results_r_02[["training_misclass_error"]], 2)` and `r round(results_r_08[["training_misclass_error"]], 2)` resepectively for the 0.2 and 0.8 cases, both higher than for the 0.5 cutoff case.
+With r = 0.2 are more individuals predicted to be diabetic, with r increased to 0.8 instead fewer individuals. The training misclassification errors are `r round(A3_results_r_02[["training_misclass_error"]], 2)` and `r round(A3_results_r_08[["training_misclass_error"]], 2)` resepectively for the 0.2 and 0.8 cases, both higher than for the 0.5 cutoff case.
+
 
 
 ```{r}
-#| layout-ncol: 2
-boundary_02_plots[["pred_plot_with_line"]]
-boundary_08_plots[["pred_plot_with_line"]]
-```
+#| label: fig-diabetes-thresholds-pw
+#| fig-cap: "Predicted diabetes classifications for thresholds r = 0.2 (left) and r = 0.8 (right). Black lines indicate the decision boundaries."
+#| fig-width: 8
+ #| fig-height: 3
+#| fig-pos: 'H'
+#| echo: false
 
+p1 <- A3_boundary_02_plots[["pred_plot_with_line"]]
+p2 <- A3_boundary_08_plots[["pred_plot_with_line"]]
+
+(p1 | p2) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "top")
+```
+## Basis function expansion
+
+Fitting a new logistic regression model after adding new features 
+
+$$
+z_1 = x_1^4, \quad
+z_2 = x_1^3 x_2, \quad
+z_3 = x_1^2 x_2^2, \quad
+z_4 = x_1 x_2^3, \quad
+z_5 = x_2^4
+$$
+results in a much more complex model but a training misclassification error (with r = 0.5) of `r round(A3_results_extended[["training_misclass_error"]], 2)` which is slightly better than the linear model. The decision boundary is now not linear but curvilinear, changing the appearance of the Glucose vs Age scatterplot (see @fig-extended-scatter). The most obvious difference from the previous model is that older subjects are "allowed" to have  higher plasma glucose levels without being predicted to be diabetic, which is a pattern that can be discerned also in the actual data.  
+
+The *theta3* to *theta7* coefficients (for the *z1* to *z5* terms) are very small (magnitude $10^{-7} or less), and individually non-significant (p values above 0.6), but they are multiplied with numerically high values for *Glucose* (raised to up to 4) in the polynomial, and the AIC reduction suggests an improved overall fit for the model.
+
+```{r}
+#| label: fig-extended-scatter
+#| fig-cap: "Predicted diabetes classifications for the extended logistic regression model with polynomial basis function expansion."
+#| fig-width: 4
+#| fig-height: 3
+#| out-width: "60%"
+#| fig-align: center
+#| fig-pos: 'H'
+#| echo: false
+
+A3_results_extended[["pred_plot"]]
+```
 

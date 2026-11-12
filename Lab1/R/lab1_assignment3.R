@@ -11,17 +11,20 @@ library(tidyverse)
 # 8. Age (years).
 # 9. Diabetes (0=no or 1=yes).
 
+# import user-definied functions
+source("R/lab1_assignment3_functions.R")
+
 # read data
-pimadata <- read.csv("data/pima-indians-diabetes.csv")
+A3_pimadata <- read.csv("data/pima-indians-diabetes.csv")
 
 # any NA:s?
-if (anyNA(pimadata)) {
+if (anyNA(A3_pimadata)) {
   message("NA:s in table")
 }
 
 # create tibble with meaningful column names
-pimatibble_raw <-
-  pimadata |>
+A3_pimatibble_raw <-
+  A3_pimadata |>
   tibble() |>
   magrittr::set_colnames(c("Parity", "Glucose", "DBP", "Skinfold", "Insulin",
                          "BMI", "Pedigree", "Age", "Diabetes")) |>
@@ -29,233 +32,147 @@ pimatibble_raw <-
   mutate(ID = row_number(), .before = Parity) |>
   select(ID, Age, Pedigree, Parity, BMI, Skinfold, DBP, Insulin, Glucose, Diabetes)
 
-# long form tibble
-pimatibble_long_raw <-
-  pimatibble_raw |>
-  pivot_longer(-c(ID,Diabetes), names_to = "Measure", values_to = "Value")
-
 # data check
-
-pimatibble_long_raw |>
+  A3_pimatibble_raw |>
+  pivot_longer(-c(ID,Diabetes),
+               names_to = "Measure",
+               values_to = "Value") |>
   ggplot() +
   aes(x=Value, fill = Diabetes) +
   geom_histogram(bins = 30) +
   scale_fill_manual(labels = c("Non-diabetic", "Diabetic"),
-                      values = c("darkmagenta", "darkorange")) +
+                      values = c("royalblue", "maroon2")) +
   facet_wrap(~ Measure, scales = "free", nrow = 2) +
   theme_bw() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "top")
 
 # checking exact range for Age, Glucose, and Diabetes
-pimatibble_raw |>
+A3_pimatibble_raw |>
   select(c(Age, Glucose, Diabetes)) |>
   map(\(x) range(x))
 
-# removing cases with Glucose == 0
-pimatibble <-
-  pimatibble_raw |>
+# removing cases with Glucose = 0
+A3_pimatibble <-
+  A3_pimatibble_raw |>
   filter(Glucose != 0)
 
-# long form tibble from cleaned data
-pimatibble_long<-
-  pimatibble |>
-  pivot_longer(-c(ID,Diabetes), names_to = "Measure", values_to = "Value")
-
 # saving adjusted ranges
-minmaxlist <-
-  pimatibble |>
+A3_minmaxlist <-
+  A3_pimatibble |>
   select(Age, Glucose) |>
   map(\(x) tibble(min = min(x), max = max(x)))
 
-Age_range <- unlist(minmaxlist[["Age"]])
-Glucose_range <- unlist(minmaxlist[["Glucose"]], use.names = FALSE)
+A3_Age_range <- unlist(A3_minmaxlist[["Age"]])
+A3_Glucose_range <- unlist(A3_minmaxlist[["Glucose"]], use.names = FALSE)
 
+# scatterplot Glucose vs Age
 
-# 1. Scatterplot Glucose vs Age
-
-Glucose_vs_Age_scatter <-
-  pimatibble |>
+A3_Glucose_vs_Age_scatter <-
+  A3_pimatibble |>
   ggplot() +
   aes(x = Age, y = Glucose, color = Diabetes) +
-  geom_point(size = 1, alpha = 0.8) +
+  geom_point(size = 0.5, alpha = 0.8) +
   theme_bw() +
+  theme(legend.position = "top") +
   scale_colour_manual(labels = c("Non-diabetic", "Diabetic"),
-                      values = c("darkmagenta", "darkorange")) +
+                      values = c("royalblue", "maroon2")) +
   scale_x_continuous(
-    limits = Age_range,
+    limits = A3_Age_range + c(-5, +5),
     breaks = scales::breaks_width(width=10)) + # equally spaced breaks
   scale_y_continuous(
-    limits = Glucose_range,
+    limits = A3_Glucose_range + c(-5, +5),
     breaks = scales::breaks_width(10),
     expand = expansion(mult = c(0, 0.05))
   ) +
   labs(y = "Plasma glucose")
 
-# 2. Logistic regression model
+# training a logistic regression model
 
 # Diabetes ~ Glucose + Age in a logistic regression model
 # using glm()= with family = "binomial" since target has two levels
 
-logistic_model <-
-  glm(Diabetes ~ Glucose + Age, data = pimatibble, family = "binomial")
+A3_logistic_model <-
+  glm(Diabetes ~ Glucose + Age, data = A3_pimatibble, family = "binomial")
 
-summary(logistic_model)
+summary(A3_logistic_model)
 
 # coefficients (= coefficients in the probabilistic equation)
 
-logistic_coef <- coef(logistic_model)
+A3_logistic_coef <- coef(A3_logistic_model)
 
-theta0 <- logistic_coef["(Intercept)"]
-theta1 <- logistic_coef["Glucose"]
-theta2 <- logistic_coef["Age"]
+A3_theta0 <- A3_logistic_coef["(Intercept)"]
+A3_theta1 <- A3_logistic_coef["Glucose"]
+A3_theta2 <- A3_logistic_coef["Age"]
 
 # adding predicted probabilities to data
-pimatibble_pred_probs <-
-  pimatibble |>
-  mutate(Predicted_prob = predict(logistic_model, type = "response"))
+A3_pimatibble_pred_probs <-
+  A3_pimatibble |>
+  mutate(Predicted_prob = predict(A3_logistic_model, type = "response"))
 
-################################################################################
-# helper function for classifications and plots
-################################################################################
-classifications_and_plots <- function(data_pred_prob, # data + predicted probabilities
-                                theta0, theta1, theta2, # coefficients
-                                r, # classification threshold
-                                glucose_range, age_range # data ranges
-                                ){
+# adding predicted diabetess classification
+# and comparison with actual diabetes class
+# and plot visualizing the results
+A3_results_r_05 <-
+  A3_classifications_and_plots(A3_pimatibble_pred_probs,
+                               r = 0.5, A3_Glucose_range, A3_Age_range)
 
-# adding prediction classifications to the data tibble
-data_with_predictions <-
-  data_pred_prob |>
-  mutate(Diabetes_prediction = ifelse(Predicted_prob > r, TRUE, FALSE),
-         Correct_pred = (Diabetes == Diabetes_prediction))
+A3_results_r_02 <-
+  A3_classifications_and_plots(A3_pimatibble_pred_probs,
+                               r = 0.2, A3_Glucose_range, A3_Age_range)
 
-# confusion matrix
-logistic_confusion <-
-  table(Actual = data_with_predictions$Diabetes,
-        Predicted = data_with_predictions$Diabetes_prediction)
+A3_results_r_08 <-
+  A3_classifications_and_plots(A3_pimatibble_pred_probs,
+                            r = 0.8, A3_Glucose_range, A3_Age_range)
 
-# proportion correctly classified observations
-correct_proportion <-
-  sum(diag(logistic_confusion))/sum(logistic_confusion)
+# adding decision boundary lines to Glucose vs Age plots
+A3_boundary_05_plots <-
+  A3_add_linear_boundary(A3_results_r_05, r = 0.5)
 
-# training misclassification error
-# = proportion of misclassified observations
-training_misclass_error <-
-  1 - correct_proportion
+A3_boundary_02_plots <-
+  A3_add_linear_boundary(A3_results_r_02, r = 0.2)
 
-# decision boundary line intercept and slope
+A3_boundary_08_plots <-
+  A3_add_linear_boundary(A3_results_r_08, r = 0.8)
 
-boundary_intercept <-  (log(r/(1-r))-theta0)/theta1
-boundary_slope <-  -theta2/theta1
+# basis function expansion
+# sdding new features
+A3_pimatibble_extended <-
+  A3_pimatibble |>
+  mutate(z1 = Glucose^4,
+         z2 = Glucose^3*Age,
+         z3 = Glucose^2*Age^2,
+         z4 = Glucose*Age^3,
+         z5 = Age^4)
 
-# scatterplot colored by predictions
-pred_plot <-
-  data_with_predictions |>
-  ggplot() +
-  aes(x = Age, y = Glucose, color = Diabetes_prediction) +
-  geom_point(size = 1, shape = 8) +
-  theme_bw() +
-  scale_colour_manual(labels = c("Non-diabetic", "Diabetic"),
-                      values = c("darkmagenta", "darkorange")) +
-  scale_x_continuous(
-    limits = age_range,
-    breaks = scales::breaks_width(10)) +
-  scale_y_continuous(
-    limits = glucose_range,
-    breaks = scales::breaks_width(10),
-    expand = expansion(mult = c(0, 0.05))
-  ) +
-  labs(y = "Plasma glucose", color = "Prediction")
+A3_logistic_model_extended <-
+  glm(Diabetes ~ Glucose + Age + z1 + z2 + z3 + z4 + z5,
+      data = A3_pimatibble_extended, family = "binomial")
 
-# scatterplot colored by correct or misclassfication
-class_plot <-
-  data_with_predictions |>
-  ggplot() +
-  aes(x = Age, y = Glucose, color = Correct_pred, shape = Correct_pred) +
-  geom_point() +
-  theme_bw() +
-  scale_colour_manual(
-    name = "Classification result",
-    values = c(`TRUE` = "green", `FALSE` = "red"),
-    labels = c(`TRUE` = "Correct", `FALSE` = "Misclassification")
-  ) +
-  scale_shape_manual(
-    name = "Classification result",
-    values = c(`TRUE` = 18, `FALSE` = 4),
-    labels = c(`TRUE` = "Correct", `FALSE` = "Misclassification")
-  ) +
-  scale_x_continuous(
-    limits = age_range,
-    breaks = scales::breaks_width(10)) +
-  scale_y_continuous(
-    limits = glucose_range,
-    breaks = scales::breaks_width(10),
-    expand = expansion(mult = c(0, 0.05))
-  ) +
-  labs(y = "Plasma glucose", color = "Classification result")+
-  geom_abline(
-    intercept = boundary_intercept,
-    slope = boundary_slope,
-    color = "black",
-    linewidth = 1
-  )
+summary(A3_logistic_model_extended)
 
-return(list(data_with_predictions = data_with_predictions,
-            confusion_matrix = logistic_confusion,
-            correct_proportion = correct_proportion,
-            training_misclass_error = training_misclass_error,
-            boundary_intercept = boundary_intercept,
-            boundary_slope = boundary_slope,
-            pred_plot = pred_plot,
-            class_plot = class_plot))
-}
+# coefficients (= coefficients in the probabilistic equation)
+
+A3_logistic_extended_coef <- coef(A3_logistic_model_extended)
+
+A3_theta0_ext <- A3_logistic_extended_coef["(Intercept)"]
+A3_theta1_ext <- A3_logistic_extended_coef["Glucose"]
+A3_theta2_ext <- A3_logistic_extended_coef["Age"]
+A3_theta3_ext <- A3_logistic_extended_coef["z1"]
+A3_theta4_ext <- A3_logistic_extended_coef["z2"]
+A3_theta5_ext <- A3_logistic_extended_coef["z3"]
+A3_theta6_ext <- A3_logistic_extended_coef["z4"]
+A3_theta7_ext <- A3_logistic_extended_coef["z5"]
 
 
-add_boundary <-  function(results_list){
-  pred_plot_with_line <-
-    results_list[["pred_plot"]] +
-    geom_abline(
-      intercept = results_list[["boundary_intercept"]],
-      slope = results_list[["boundary_slope"]],
-      color = "black",
-      linewidth = 1
-    )
-  class_plot_with_line <-
-    results_list[["class_plot"]] +
-    geom_abline(
-      intercept = results_list[["boundary_intercept"]],
-      slope = results_list[["boundary_slope"]],
-      color = "black",
-      linewidth = 1
-    )
-  return(list(pred_plot_with_line=pred_plot_with_line,
-              class_plot_with_line=class_plot_with_line))
-}
+# adding predicted probabilities to data
+A3_pimatibble_extended_pred_probs <-
+  A3_pimatibble_extended |>
+  mutate(Predicted_prob = predict(A3_logistic_model_extended, type = "response"))
 
 
 
-################################################################################
+A3_results_extended <-
+  A3_classifications_and_plots(A3_pimatibble_extended_pred_probs,
+                               r = 0.5,
+                               A3_Glucose_range, A3_Age_range)
 
-results_r_05 <-
-  classifications_and_plots(pimatibble_pred_probs,
-                            theta0, theta1, theta2, r = 0.5,
-                            Glucose_range, Age_range)
-
-results_r_02 <-
-  classifications_and_plots(pimatibble_pred_probs,
-                            theta0, theta1, theta2, r = 0.2,
-                            Glucose_range, Age_range)
-
-results_r_08 <-
-  classifications_and_plots(pimatibble_pred_probs,
-                            theta0, theta1, theta2, r = 0.8,
-                            Glucose_range, Age_range)
-
-boundary_05_plots <-
-  add_boundary(results_r_05)
-
-boundary_02_plots <-
-  add_boundary(results_r_02)
-
-boundary_08_plots <-
-  add_boundary(results_r_08)
