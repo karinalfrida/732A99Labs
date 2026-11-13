@@ -53,6 +53,12 @@ library(patchwork)
 # Theory
 <!-- {{< include sections/lab1_theory.qmd >}} -->
 
+# Statement of Contribution
+
+In Assignment 1, Jonas Hautamäki Bengston was primarily responsible for both the code implementation and the written report. Jonas Danielsson was responsible for the code implementation and report for Assignment 2, while Kerstin Arbring was responsible for the corresponding work in Assignment 3.
+
+Following the initial completion of Assignments 1–3, the code and written reports were circulated among the group members for one round of refinement and one round of review of text. Assignment 4 (Theory) was drafted collaboratively by all three group members. The results and conclusions from all assignments were discussed collectively.
+
 \clearpage
 
 <!-- # References -->
