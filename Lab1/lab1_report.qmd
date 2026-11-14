@@ -38,7 +38,7 @@ library(patchwork)
 \justifying
 
 # Assignment 1
- <!-- {{< include sections/lab1_assignment1.qmd>}} -->
+ {{< include sections/lab1_assignment1.qmd >}}
 
 
 \clearpage

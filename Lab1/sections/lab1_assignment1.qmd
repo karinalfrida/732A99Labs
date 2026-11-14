@@ -1,0 +1,112 @@
+<!-- Assignment 1 -->
+
+```{r}
+#| include: false
+source("R/lab1_assignment1.R")
+```
+
+## Data and partitioning
+
+The data set contains `r nrow(a1.data)` handwritten digits. Each digit is
+represented by 64 features (an 8×8 image where each value is the number of
+active pixels in a 4×4 block, ranging from 0 to 16) and the true digit
+(0–9) as response. The response was converted to a factor so that kknn
+performs classification. The data were divided into training
+(`r nrow(a1.train)` observations, 50%), validation (`r nrow(a1.valid)`, 25%)
+and test (`r nrow(a1.test)`, 25%) sets using the partitioning code from
+Lecture 1a, slide 34, with `set.seed(12345)`.
+
+## Confusion matrices and misclassification errors
+
+A 30-nearest neighbor classifier with a rectangular kernel (unweighted
+majority vote among the neighbours) was fitted to the training data using
+`kknn()`. Predictions were made for both the training and the test data,
+and the resulting confusion matrices are shown in @tbl-a1-cm-train and
+@tbl-a1-cm-test.
+
+```{r}
+#| label: tbl-a1-cm-test
+#| tbl-cap: "Confusion matrix for the test data (rows = true digit, columns = predicted digit)."
+knitr::kable(a1.cm.test)
+```
+
+```{r}
+#| label: tbl-a1-cm-train
+#| tbl-cap: "confusion matrix for the training data (rows = true digit, columns = predicted digit)."
+knitr::kable(a1.cm.train)
+```
+
+The misclassification error was `r round(a1.misclass.rate.train, 4)` for the training data and `r round(a1.misclass.rate.test, 4)` for the test data. About 95% of the digits are classified correctly, which is good overall
+quality, and the small gap between training and test error suggests little
+overfitting. Digits 0, 2, 6 and 7 are classified almost perfectly, while
+4, 5 and 8 are the hardest. Common confusions are 4 → 7/9, 8 → 1 and
+5 → 9, digit pairs that can look alike in the low-resolution 8×8 images.
+
+## Easiest and hardest cases of digit 8
+
+```{r}
+#| label: fig-a1-eights
+#| fig-cap: "The two easiest (top) and three hardest (bottom) cases of digit 8 in the training data."
+#| fig-subcap:
+#|   - "Easy, p = 1"
+#|   - "Easy, p = 1"
+#|   - "Hard, p = 0.10"
+#|   - "Hard, p = 0.13"
+#|   - "Hard, p = 0.17"
+#| layout: [[-1, 1, 1, -1], [1, 1, 1]]
+#| fig-width: 3
+#| fig-height: 3
+#| fig-pos: 'H'
+for (r in c(a1.easiest, a1.hardest)) a1.plot_digit(r, "")
+```
+
+The two easiest cases were classified as 8 with high probability, and they are also easy to recognise visually: both show the characteristic shape of an 8 with two closed loops. The three hardest cases had low probabilities for the correct class and are hard to recognise even for a human. Two of them lok more like a 1 than an 8, since they are narrow and lack clear loops, and tht third could just as well be read as a 6. This suggests that the misclassifications are largely caused by unclear handwriting rather than by the model itself.
+
+## Misclassification error for different K
+
+```{R}
+#| label: fig-a1-misclass-k
+#| fig-cap: "Training and validation misclassification errors for K = 1, ..., 30."
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: "70%"
+#| fig-align: center
+#| fig-pos: 'H'
+plot(1:30, a1.misclass.train, type = "b", col = "blue", pch = 19,
+     ylim = range(c(a1.misclass.train, a1.misclass.valid)),
+     xlab = "K", ylab = "Misclassification error")
+lines(1:30, a1.misclass.valid, type = "b", col = "red", pch = 19)
+legend("bottomright", legend = c("Training", "Validation"),
+       col = c("blue", "red"), pch = 19, lty = 1)
+```
+
+The model complexity decreases when K increases: with K = 1 the classifier follows every single training point, while a large K averages over many neighbours and gives smoother decision boundaries. Accordingly, the training error is zero for the smallest K and increases with K, as seen in @fig-a1-misclass-k. The validation error is lowest for small to moderate K and then increases as the model becomes too simple.
+
+The optimal value is K = `r a1.k.opt`, where the validation error is lowest. For this K the misclassification errors are `r round(a1.misclass.train[a1.k.opt], 4)` (training), `r round(a1.misclass.valid[a1.k.opt], 4)` (validation) and `r round(a1.misclass.test.opt, 4)` (test). The training error is lowest since the model has seen that data. The test error is close to the validation error, so the model generalizes well to new data and the overall quality is good.
+
+## Cross-entropy for different K
+
+The validation error was also computed as the cross-entropy
+
+$$
+CE = -\frac{1}{n}\sum_{i=1}^{n} \log\left(\hat{p}_{i, y_i} + 10^{-15}\right),
+$$
+
+where $\hat{p}_{i, y_i}$ is the predicted probability of the true class for observation $i$.
+
+```{r}
+#| label: fig-a1-ce-k
+#| fig-cap: "Validation cross-entropy for K = 1, ..., 30."
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: "70%"
+#| fig-align: center
+#| fig-pos: 'H'
+par(mar = c(5, 5, 2, 2))
+plot(1:30, a1.ce.valid, type = "b", pch = 19, col = "red",
+     xlab = "K", ylab = "Cross-entropy (validation)")
+```
+
+According to @fig-a1-ce-k, the optimal value is K = `r a1.k.opt.ce`, where the validation cross-entropy is lowest.
+
+If the response follows a multinomial distribution, the cross-entropy equals the negative log-likelihood of the data, so minimizing it corresponds to maximum likelihood estimation. The misclassification error only counts whether a prediction is correct or not. A correct prediction with probability 0.35 counts the same as one with probability 1, and a wrong prediction made with high confidence counts the same as a narrow miss. Cross-entropy uses the full predicted probabilities and penalizes confident mistakes heavily, so it measures how well the model estimates the class probabilities and not only which class it picks.

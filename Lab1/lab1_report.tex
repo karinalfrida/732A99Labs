@@ -333,6 +333,248 @@ Linköping University\\
 
 \section{Assignment 1}\label{assignment-1}
 
+\subsection{Data and partitioning}\label{data-and-partitioning}
+
+The data set contains 3823 handwritten digits. Each digit is represented
+by 64 features (an 8×8 image where each value is the number of active
+pixels in a 4×4 block, ranging from 0 to 16) and the true digit (0--9)
+as response. The response was converted to a factor so that kknn
+performs classification. The data were divided into training (1911
+observations, 50\%), validation (955, 25\%) and test (957, 25\%) sets
+using the partitioning code from Lecture 1a, slide 34, with
+\texttt{set.seed(12345)}.
+
+\subsection{Confusion matrices and misclassification
+errors}\label{confusion-matrices-and-misclassification-errors}
+
+A 30-nearest neighbor classifier with a rectangular kernel (unweighted
+majority vote among the neighbours) was fitted to the training data
+using \texttt{kknn()}. Predictions were made for both the training and
+the test data, and the resulting confusion matrices are shown in
+Table~\ref{tbl-a1-cm-train} and Table~\ref{tbl-a1-cm-test}.
+
+{
+
+\begin{longtable}[]{@{}lrrrrrrrrrr@{}}
+
+\caption{\label{tbl-a1-cm-test}Confusion matrix for the test data (rows
+= true digit, columns = predicted digit).}
+
+\tabularnewline
+
+\toprule\noalign{}
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 77 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 81 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 3 \\
+2 & 0 & 0 & 98 & 0 & 0 & 0 & 0 & 0 & 3 & 0 \\
+3 & 0 & 0 & 0 & 107 & 0 & 2 & 0 & 0 & 1 & 1 \\
+4 & 0 & 0 & 0 & 0 & 94 & 0 & 2 & 6 & 2 & 5 \\
+5 & 0 & 1 & 1 & 0 & 0 & 93 & 2 & 1 & 0 & 5 \\
+6 & 0 & 0 & 0 & 0 & 0 & 0 & 90 & 0 & 0 & 0 \\
+7 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 111 & 0 & 0 \\
+8 & 0 & 7 & 0 & 1 & 0 & 0 & 0 & 0 & 70 & 0 \\
+9 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 85 \\
+
+\end{longtable}
+
+}
+
+{
+
+\begin{longtable}[]{@{}lrrrrrrrrrr@{}}
+
+\caption{\label{tbl-a1-cm-train}confusion matrix for the training data
+(rows = true digit, columns = predicted digit).}
+
+\tabularnewline
+
+\toprule\noalign{}
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 202 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 179 & 11 & 0 & 0 & 0 & 0 & 1 & 1 & 3 \\
+2 & 0 & 1 & 190 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+3 & 0 & 0 & 0 & 185 & 0 & 1 & 0 & 1 & 0 & 1 \\
+4 & 1 & 3 & 0 & 0 & 159 & 0 & 0 & 7 & 1 & 4 \\
+5 & 0 & 0 & 0 & 1 & 0 & 171 & 0 & 1 & 0 & 8 \\
+6 & 0 & 2 & 0 & 0 & 0 & 0 & 190 & 0 & 0 & 0 \\
+7 & 0 & 3 & 0 & 0 & 0 & 0 & 0 & 178 & 1 & 0 \\
+8 & 0 & 10 & 0 & 2 & 0 & 0 & 2 & 0 & 188 & 2 \\
+9 & 1 & 3 & 0 & 5 & 2 & 0 & 0 & 3 & 3 & 183 \\
+
+\end{longtable}
+
+}
+
+The misclassification error was 0.045 for the training data and 0.0533
+for the test data. About 95\% of the digits are classified correctly,
+which is good overall quality, and the small gap between training and
+test error suggests little overfitting. Digits 0, 2, 6 and 7 are
+classified almost perfectly, while 4, 5 and 8 are the hardest. Common
+confusions are 4 → 7/9, 8 → 1 and 5 → 9, digit pairs that can look alike
+in the low-resolution 8×8 images.
+
+\subsection{Easiest and hardest cases of digit
+8}\label{easiest-and-hardest-cases-of-digit-8}
+
+\begin{figure}[H]
+
+\begin{minipage}[t]{0.25\linewidth}
+~\end{minipage}%
+%
+\begin{minipage}[t]{0.25\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-1.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-1}Easy, p = 1}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.25\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-2.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-2}Easy, p = 1}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.25\linewidth}
+~\end{minipage}%
+\newline
+\begin{minipage}[t]{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-3.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-3}Hard, p = 0.10}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-4.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-4}Hard, p = 0.13}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-5.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-5}Hard, p = 0.17}
+
+\end{minipage}%
+
+\caption{\label{fig-a1-eights}The two easiest (top) and three hardest
+(bottom) cases of digit 8 in the training data.}
+
+\end{figure}%
+
+The two easiest cases were classified as 8 with high probability, and
+they are also easy to recognise visually: both show the characteristic
+shape of an 8 with two closed loops. The three hardest cases had low
+probabilities for the correct class and are hard to recognise even for a
+human. Two of them lok more like a 1 than an 8, since they are narrow
+and lack clear loops, and tht third could just as well be read as a 6.
+This suggests that the misclassifications are largely caused by unclear
+handwriting rather than by the model itself.
+
+\subsection{Misclassification error for different
+K}\label{misclassification-error-for-different-k}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-misclass-k-1.pdf}
+
+}
+
+\caption{\label{fig-a1-misclass-k}Training and validation
+misclassification errors for K = 1, \ldots, 30.}
+
+\end{figure}%
+
+The model complexity decreases when K increases: with K = 1 the
+classifier follows every single training point, while a large K averages
+over many neighbours and gives smoother decision boundaries.
+Accordingly, the training error is zero for the smallest K and increases
+with K, as seen in Figure~\ref{fig-a1-misclass-k}. The validation error
+is lowest for small to moderate K and then increases as the model
+becomes too simple.
+
+The optimal value is K = 3, where the validation error is lowest. For
+this K the misclassification errors are 0.0115 (training), 0.0251
+(validation) and 0.024 (test). The training error is lowest since the
+model has seen that data. The test error is close to the validation
+error, so the model generalizes well to new data and the overall quality
+is good.
+
+\subsection{Cross-entropy for different
+K}\label{cross-entropy-for-different-k}
+
+The validation error was also computed as the cross-entropy
+
+\[
+CE = -\frac{1}{n}\sum_{i=1}^{n} \log\left(\hat{p}_{i, y_i} + 10^{-15}\right),
+\]
+
+where \(\hat{p}_{i, y_i}\) is the predicted probability of the true
+class for observation \(i\).
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-ce-k-1.pdf}
+
+}
+
+\caption{\label{fig-a1-ce-k}Validation cross-entropy for K = 1, \ldots,
+30.}
+
+\end{figure}%
+
+According to Figure~\ref{fig-a1-ce-k}, the optimal value is K = 6, where
+the validation cross-entropy is lowest.
+
+If the response follows a multinomial distribution, the cross-entropy
+equals the negative log-likelihood of the data, so minimizing it
+corresponds to maximum likelihood estimation. The misclassification
+error only counts whether a prediction is correct or not. A correct
+prediction with probability 0.35 counts the same as one with probability
+1, and a wrong prediction made with high confidence counts the same as a
+narrow miss. Cross-entropy uses the full predicted probabilities and
+penalizes confident mistakes heavily, so it measures how well the model
+estimates the class probabilities and not only which class it picks.
+
 \clearpage
 
 \section{Assignment 2 - Linear regression and ridge
@@ -397,6 +639,8 @@ X(X^\top X+\lambda I)^{-1}X^\top
 \right].
 \]
 
+\pagebreak
+
 \subsection{Comparison of penalty
 strengths}\label{comparison-of-penalty-strengths}
 
@@ -404,6 +648,8 @@ The estimated optimal coefficients were used to predict responses by
 \(\hat{\mathbf y}=X\hat{\boldsymbol\theta}\). Table
 Table~\ref{tbl-a2-models} compares the training and test MSE and the
 effective degrees of freedom for the three specified penalty strengths.
+
+{
 
 \begin{longtable}[]{@{}lrrrr@{}}
 
@@ -424,6 +670,8 @@ Ridge (lambda = 100) & 0.8844 & 0.9323 & 9.9249 & 0.9404 \\
 Ridge (lambda = 1000) & 0.9211 & 0.9540 & 5.6439 & 0.9598 \\
 
 \end{longtable}
+
+}
 
 Among the specified penalties, \(\lambda = 100\) produced the lowest
 test MSE (0.9323), compared with 0.9354 for OLS. The lecture-defined
@@ -661,7 +909,7 @@ function expansion.}
 \begin{Highlighting}[]
 \CommentTok{\# Lab 1, Assignment 2 {-} Linear regression and ridge regression}
 \CommentTok{\#}
-\CommentTok{\# Sourced by lab1\_assignment2.qmd. Paths are relative to Lab1/.}
+\CommentTok{\# Sourced by sections/lab1\_assignment2.qmd. Paths are relative to Lab1/.}
 \CommentTok{\# Prefix objects with a2\_ so they don\textquotesingle{}t clash with other assignments\textquotesingle{}}
 \CommentTok{\# scripts when everything is sourced into the combined report.}
 
@@ -819,6 +1067,44 @@ function expansion.}
 \CommentTok{\# coefficients side by side {-}{-} linear regression and ridge per lambda}
 \NormalTok{a2\_ridge\_coefs }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{lm =} \FunctionTok{coef}\NormalTok{(a2\_lm),}
                         \FunctionTok{sapply}\NormalTok{(a2\_ridge\_fits, \textbackslash{}(f) f}\SpecialCharTok{$}\NormalTok{theta))}
+
+\CommentTok{\# Values used in report {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+
+\DocumentationTok{\#\# fixing name formating (removing backtick formating from factors)}
+\NormalTok{a2\_significant\_names }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"\textasciigrave{}"}\NormalTok{, }\StringTok{""}\NormalTok{, a2\_lm\_signif, }\AttributeTok{fixed =} \ConstantTok{TRUE}\NormalTok{)}
+
+\DocumentationTok{\#\# significant coef print}
+\NormalTok{a2\_significance\_sentence }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}
+  \FunctionTok{length}\NormalTok{(a2\_significant\_names),}
+  \StringTok{" coefficients were significant at the 5\% level: "}\NormalTok{,}
+  \FunctionTok{paste}\NormalTok{(a2\_significant\_names, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"."}
+\NormalTok{)}
+
+\CommentTok{\# print values}
+\NormalTok{a2\_sigma\_mle }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(a2\_lm)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{a2\_best\_idx }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{test\_mse)}
+\NormalTok{a2\_best\_lambda }\OtherTok{\textless{}{-}}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{lambda[a2\_best\_idx]}
+\NormalTok{a2\_best\_test\_mse }\OtherTok{\textless{}{-}}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{test\_mse[a2\_best\_idx]}
+
+\CommentTok{\# Final comparision table}
+\NormalTok{a2\_comparison }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{Model =} \StringTok{"OLS"}\NormalTok{,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Training MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_lm\_train\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Test MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_lm\_test\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Effective df}\StringTok{\textasciigrave{}} \OtherTok{=} \FunctionTok{ncol}\NormalTok{(a2\_X\_train),}
+    \StringTok{\textasciigrave{}}\AttributeTok{Sigma}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_sigma\_mle,}
+    \AttributeTok{check.names =} \ConstantTok{FALSE}
+\NormalTok{  ),}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{Model =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Ridge (lambda = "}\NormalTok{, a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{lambda, }\StringTok{")"}\NormalTok{),}
+    \StringTok{\textasciigrave{}}\AttributeTok{Training MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{train\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Test MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{test\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Effective df}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{df,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Sigma}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{sigma,}
+    \AttributeTok{check.names =} \ConstantTok{FALSE}
+\NormalTok{  )}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
