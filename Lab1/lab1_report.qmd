@@ -68,6 +68,11 @@ library(patchwork)
 
 ## Assignment 1
 
+```{r}
+#| file: R/lab1_assignment1.R
+#| echo: true
+#| eval: false
+```
 
 ## Assignment 2
 
