@@ -333,6 +333,248 @@ Linköping University\\
 
 \section{Assignment 1}\label{assignment-1}
 
+\subsection{Data and partitioning}\label{data-and-partitioning}
+
+The data set contains 3823 handwritten digits. Each digit is represented
+by 64 features (an 8×8 image where each value is the number of active
+pixels in a 4×4 block, ranging from 0 to 16) and the true digit (0--9)
+as response. The response was converted to a factor so that kknn
+performs classification. The data were divided into training (1911
+observations, 50\%), validation (955, 25\%) and test (957, 25\%) sets
+using the partitioning code from Lecture 1a, slide 34, with
+\texttt{set.seed(12345)}.
+
+\subsection{Confusion matrices and misclassification
+errors}\label{confusion-matrices-and-misclassification-errors}
+
+A 30-nearest neighbor classifier with a rectangular kernel (unweighted
+majority vote among the neighbours) was fitted to the training data
+using \texttt{kknn()}. Predictions were made for both the training and
+the test data, and the resulting confusion matrices are shown in
+Table~\ref{tbl-a1-cm-train} and Table~\ref{tbl-a1-cm-test}.
+
+{
+
+\begin{longtable}[]{@{}lrrrrrrrrrr@{}}
+
+\caption{\label{tbl-a1-cm-test}Confusion matrix for the test data (rows
+= true digit, columns = predicted digit).}
+
+\tabularnewline
+
+\toprule\noalign{}
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 77 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 81 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 3 \\
+2 & 0 & 0 & 98 & 0 & 0 & 0 & 0 & 0 & 3 & 0 \\
+3 & 0 & 0 & 0 & 107 & 0 & 2 & 0 & 0 & 1 & 1 \\
+4 & 0 & 0 & 0 & 0 & 94 & 0 & 2 & 6 & 2 & 5 \\
+5 & 0 & 1 & 1 & 0 & 0 & 93 & 2 & 1 & 0 & 5 \\
+6 & 0 & 0 & 0 & 0 & 0 & 0 & 90 & 0 & 0 & 0 \\
+7 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 111 & 0 & 0 \\
+8 & 0 & 7 & 0 & 1 & 0 & 0 & 0 & 0 & 70 & 0 \\
+9 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 85 \\
+
+\end{longtable}
+
+}
+
+{
+
+\begin{longtable}[]{@{}lrrrrrrrrrr@{}}
+
+\caption{\label{tbl-a1-cm-train}Confusion matrix for the training data
+(rows = true digit, columns = predicted digit).}
+
+\tabularnewline
+
+\toprule\noalign{}
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 202 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 179 & 11 & 0 & 0 & 0 & 0 & 1 & 1 & 3 \\
+2 & 0 & 1 & 190 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+3 & 0 & 0 & 0 & 185 & 0 & 1 & 0 & 1 & 0 & 1 \\
+4 & 1 & 3 & 0 & 0 & 159 & 0 & 0 & 7 & 1 & 4 \\
+5 & 0 & 0 & 0 & 1 & 0 & 171 & 0 & 1 & 0 & 8 \\
+6 & 0 & 2 & 0 & 0 & 0 & 0 & 190 & 0 & 0 & 0 \\
+7 & 0 & 3 & 0 & 0 & 0 & 0 & 0 & 178 & 1 & 0 \\
+8 & 0 & 10 & 0 & 2 & 0 & 0 & 2 & 0 & 188 & 2 \\
+9 & 1 & 3 & 0 & 5 & 2 & 0 & 0 & 3 & 3 & 183 \\
+
+\end{longtable}
+
+}
+
+The misclassification error was 0.045 for the training data and 0.0533
+for the test data. About 95\% of the digits are classified correctly,
+which is good overall quality, and the small gap between training and
+test error suggests little overfitting. Digits 0, 2, 6 and 7 are
+classified almost perfectly, while 4, 5 and 8 are the hardest. Common
+confusions are 4 → 7/9, 8 → 1 and 5 → 9, digit pairs that can look alike
+in the low-resolution 8×8 images.
+
+\subsection{Easiest and hardest cases of digit
+8}\label{easiest-and-hardest-cases-of-digit-8}
+
+\begin{figure}[H]
+
+\begin{minipage}[t]{0.25\linewidth}
+~\end{minipage}%
+%
+\begin{minipage}[t]{0.25\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-1.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-1}Easy, p = 1}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.25\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-2.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-2}Easy, p = 1}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.25\linewidth}
+~\end{minipage}%
+\newline
+\begin{minipage}[t]{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-3.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-3}Hard, p = 0.10}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-4.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-4}Hard, p = 0.13}
+
+\end{minipage}%
+%
+\begin{minipage}[t]{0.33\linewidth}
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-eights-5.pdf}}
+
+}
+
+\subcaption{\label{fig-a1-eights-5}Hard, p = 0.17}
+
+\end{minipage}%
+
+\caption{\label{fig-a1-eights}The two easiest (top) and three hardest
+(bottom) cases of digit 8 in the training data.}
+
+\end{figure}%
+
+The two easiest cases were classified as 8 with high probability, and
+they are also easy to recognise visually: both show the characteristic
+shape of an 8 with two closed loops. The three hardest cases had low
+probabilities for the correct class and are hard to recognise even for a
+human. Two of them look more like a 1 than an 8, since they are narrow
+and lack clear loops, and the third could just as well be read as a 6.
+This suggests that the misclassifications are largely caused by unclear
+handwriting rather than by the model itself.
+
+\subsection{Misclassification error for different
+K}\label{misclassification-error-for-different-k}
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-misclass-k-1.pdf}
+
+}
+
+\caption{\label{fig-a1-misclass-k}Training and validation
+misclassification errors for K = 1, \ldots, 30.}
+
+\end{figure}%
+
+The model complexity decreases when K increases: with K = 1 the
+classifier follows every single training point, while a large K averages
+over many neighbours and gives smoother decision boundaries.
+Accordingly, the training error is zero for the smallest K and increases
+with K, as seen in Figure~\ref{fig-a1-misclass-k}. The validation error
+is lowest for small to moderate K and then increases as the model
+becomes too simple.
+
+The optimal value is K = 3, where the validation error is lowest. For
+this K the misclassification errors are 0.0115 (training), 0.0251
+(validation) and 0.024 (test). The training error is lowest since the
+model has seen that data. The test error is close to the validation
+error, so the model generalizes well to new data and the overall quality
+is good.
+
+\subsection{Cross-entropy for different
+K}\label{cross-entropy-for-different-k}
+
+The validation error was also computed as the cross-entropy
+
+\[
+CE = -\frac{1}{n}\sum_{i=1}^{n} \log\left(\hat{p}_{i, y_i} + 10^{-15}\right),
+\]
+
+where \(\hat{p}_{i, y_i}\) is the predicted probability of the true
+class for observation \(i\).
+
+\begin{figure}[H]
+
+\centering{
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{lab1_report_files/figure-pdf/fig-a1-ce-k-1.pdf}
+
+}
+
+\caption{\label{fig-a1-ce-k}Validation cross-entropy for K = 1, \ldots,
+30.}
+
+\end{figure}%
+
+According to Figure~\ref{fig-a1-ce-k}, the optimal value is K = 6, where
+the validation cross-entropy is lowest.
+
+If the response follows a multinomial distribution, the cross-entropy
+equals the negative log-likelihood of the data, so minimizing it
+corresponds to maximum likelihood estimation. The misclassification
+error only counts whether a prediction is correct or not. A correct
+prediction with probability 0.35 counts the same as one with probability
+1, and a wrong prediction made with high confidence counts the same as a
+narrow miss. Cross-entropy uses the full predicted probabilities and
+penalizes confident mistakes heavily, so it measures how well the model
+estimates the class probabilities and not only which class it picks.
+
 \clearpage
 
 \section{Assignment 2 - Linear regression and ridge
@@ -407,6 +649,8 @@ The estimated optimal coefficients were used to predict responses by
 Table~\ref{tbl-a2-models} compares the training and test MSE and the
 effective degrees of freedom for the three specified penalty strengths.
 
+{
+
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-a2-models}OLS and Ridge results. MSE values are on
@@ -426,6 +670,8 @@ Ridge (lambda = 100) & 0.8844 & 0.9323 & 9.9249 & 0.9404 \\
 Ridge (lambda = 1000) & 0.9211 & 0.9540 & 5.6439 & 0.9598 \\
 
 \end{longtable}
+
+}
 
 Among the specified penalties, \(\lambda = 100\) produced the lowest
 test MSE (0.9323), compared with 0.9354 for OLS. The lecture-defined
@@ -647,6 +893,59 @@ function expansion.}
 
 \section{Theory}\label{theory}
 
+\subsection{Why can it be important to consider various probability
+thresholds in the classification
+problems?}\label{why-can-it-be-important-to-consider-various-probability-thresholds-in-the-classification-problems}
+
+Different classifcation threshholds (r) affect trade-off between false
+positives and false negatives. This can be particulary important when
+the consequences of the different classification errors are not equally
+severe. For example, lowering the threshold in disease detection can
+identify more patients with the disease, but at the cost of more false
+positives.
+
+The textbook show example of this on page 92-93, example 4.5. It
+compares a default threshold of 0.5 with 0.15 for detecting thyroid
+disease.
+
+\subsection{What ways of collecting correct values of the target
+variable for the supervised learning problems are mentioned in the
+book?}\label{what-ways-of-collecting-correct-values-of-the-target-variable-for-the-supervised-learning-problems-are-mentioned-in-the-book}
+
+\subsection{How can one express the cost function of the linear
+regression in the matrix form, according to the
+book?}\label{how-can-one-express-the-cost-function-of-the-linear-regression-in-the-matrix-form-according-to-the-book}
+
+The cost function for linear regression with squared error loss can be
+expressed in matrix form as,
+
+\[
+J(\boldsymbol{\theta})
+= \frac{1}{n}\|X\boldsymbol{\theta}-\mathbf{y}\|_2^2,
+\]
+
+where \(X\) is the design matrix, \(\boldsymbol{\theta}\) is the vector
+of regression coefficients, \(\mathbf{y}\) is the vector of observed
+responses, and \(n\) is the number of observations. The cost function
+represents the mean squared error between the predicted and observed
+values and is minimized when estimating the regression coefficients.
+
+The textbook show this on page 45, equation (3.11)
+
+\section{Statement of Contribution}\label{statement-of-contribution}
+
+In Assignment 1, Jonas Hautamäki Bengston was primarily responsible for
+both the code implementation and the written report. Jonas Danielsson
+was responsible for the code implementation and report for Assignment 2,
+while Kerstin Arbring was responsible for the corresponding work in
+Assignment 3.
+
+Following the initial completion of Assignments 1--3, the code and
+written reports were circulated among the group members for one round of
+refinement and one round of review of text. Assignment 4 (Theory) was
+drafted collaboratively by all three group members. The results and
+conclusions from all assignments were discussed collectively.
+
 \clearpage
 
 \clearpage
@@ -656,6 +955,187 @@ function expansion.}
 \section{R code}\label{r-code}
 
 \subsection{Assignment 1}\label{assignment-1-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(kknn)}
+
+\CommentTok{\# 1. + 2.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Read and separate data}
+\NormalTok{a1\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/optdigits.csv"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{a1\_data}\SpecialCharTok{$}\NormalTok{V65 }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(a1\_data}\SpecialCharTok{$}\NormalTok{V65)}
+\NormalTok{a1\_n }\OtherTok{=} \FunctionTok{dim}\NormalTok{(a1\_data)[}\DecValTok{1}\NormalTok{]}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
+\NormalTok{a1\_id }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{a1\_n, }\FunctionTok{floor}\NormalTok{(a1\_n}\SpecialCharTok{*}\FloatTok{0.5}\NormalTok{))}
+\NormalTok{a1\_train }\OtherTok{=}\NormalTok{ a1\_data[a1\_id, ]}
+
+\NormalTok{a1\_id1 }\OtherTok{=} \FunctionTok{setdiff}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{a1\_n, a1\_id)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
+\NormalTok{a1\_id2 }\OtherTok{=} \FunctionTok{sample}\NormalTok{(a1\_id1, }\FunctionTok{floor}\NormalTok{(a1\_n}\SpecialCharTok{*}\FloatTok{0.25}\NormalTok{))}
+\NormalTok{a1\_valid }\OtherTok{=}\NormalTok{ a1\_data[a1\_id2, ]}
+
+\NormalTok{a1\_id3 }\OtherTok{=} \FunctionTok{setdiff}\NormalTok{(a1\_id1, a1\_id2)}
+\NormalTok{a1\_test }\OtherTok{=}\NormalTok{ a1\_data[a1\_id3, ]}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+
+\NormalTok{a1\_test\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(}
+\NormalTok{  V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+  \AttributeTok{train =}\NormalTok{ a1\_train,}
+  \AttributeTok{test =}\NormalTok{ a1\_test,}
+  \AttributeTok{k =} \DecValTok{30}\NormalTok{,}
+  \AttributeTok{kernel =} \StringTok{"rectangular"}
+\NormalTok{)}
+
+\NormalTok{a1\_train\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                   \AttributeTok{train =}\NormalTok{ a1\_train,}
+                   \AttributeTok{test =}\NormalTok{ a1\_train,}
+                   \AttributeTok{k =} \DecValTok{30}\NormalTok{,}
+                   \AttributeTok{kernel =} \StringTok{"rectangular"}
+\NormalTok{                   )}
+
+\NormalTok{a1\_cm\_test }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_test\_kknn))}
+\NormalTok{a1\_n\_errors\_test }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_test))}
+\NormalTok{a1\_misclass\_rate\_test }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_test}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_test)}
+
+\NormalTok{a1\_cm\_train }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_train\_kknn))}
+\NormalTok{a1\_n\_errors\_train }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_train))}
+\NormalTok{a1\_misclass\_rate\_train }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_train}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_train)}
+
+\CommentTok{\#Comment: The 30{-}NN classifier has misclassification rates of 4.5\% (training)}
+\CommentTok{\#and 5.3\% (test), so about 95\% of the digits are classified correctly. That}
+\CommentTok{\#is good quality overall, and the small gap between the two errors suggests}
+\CommentTok{\#little overfitting.}
+
+\CommentTok{\#Digits 0, 2, 6, 7 are classified almost perfectly. The hardest digits are}
+\CommentTok{\#4, 5, 8. Common confusions are 4 {-}\textgreater{} 7/9, 8 {-}\textgreater{} 1 and 5 {-}\textgreater{} 9, pairs that can}
+\CommentTok{\#look alike in the low{-}resolution 8x8 images.}
+
+\CommentTok{\# 3.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+
+\CommentTok{\# Row \# in train for all real 8\textquotesingle{}s}
+\NormalTok{a1\_index8 }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(a1\_train}\SpecialCharTok{$}\NormalTok{V65 }\SpecialCharTok{==} \StringTok{"8"}\NormalTok{)}
+
+\CommentTok{\# Probability for the class "8" for just those rows}
+\NormalTok{a1\_prob8 }\OtherTok{\textless{}{-}}\NormalTok{ a1\_train\_kknn}\SpecialCharTok{$}\NormalTok{prob[a1\_index8, }\StringTok{"8"}\NormalTok{]}
+
+\CommentTok{\# Sort from lowest to highest probability and translate to rownumber in train}
+\NormalTok{a1\_index8\_sorted }\OtherTok{\textless{}{-}}\NormalTok{ a1\_index8[}\FunctionTok{order}\NormalTok{(a1\_prob8)]}
+
+\NormalTok{a1\_hardest }\OtherTok{\textless{}{-}} \FunctionTok{head}\NormalTok{(a1\_index8\_sorted, }\DecValTok{3}\NormalTok{) }\CommentTok{\# 3 lowest probabilities}
+\NormalTok{a1\_easiest }\OtherTok{\textless{}{-}} \FunctionTok{tail}\NormalTok{(a1\_index8\_sorted, }\DecValTok{2}\NormalTok{) }\CommentTok{\# 2 highest probabilities}
+
+\CommentTok{\# Make row in train to 8x8{-}matrix and plot it}
+\NormalTok{a1\_plot\_digit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(row, title)\{}
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(a1\_train[row, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{64}\NormalTok{]), }\AttributeTok{nrow =} \DecValTok{8}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{8}\NormalTok{, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  m }\OtherTok{\textless{}{-}}\NormalTok{ m[}\DecValTok{8}\SpecialCharTok{:}\DecValTok{1}\NormalTok{, ] }\CommentTok{\# turn rows, heatmap plots first row on the bottom}
+  \FunctionTok{heatmap}\NormalTok{(m, }\AttributeTok{Colv =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{Rowv =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{labRow =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{labCol =} \ConstantTok{NA}\NormalTok{,}
+          \AttributeTok{margins =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# The easy ones are easy to tell they are 8\textquotesingle{}s and the hard ones are difficult.}
+\CommentTok{\# 2 of the hard ones seem more likely to me to be ones and one of them could}
+\CommentTok{\# just as well be a six}
+
+\CommentTok{\# 4.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+
+\NormalTok{a1\_misclass\_train }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+\NormalTok{a1\_misclass\_valid }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{)\{}
+\NormalTok{  train\_kknn\_inner }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                     \AttributeTok{train =}\NormalTok{ a1\_train,}
+                     \AttributeTok{test =}\NormalTok{ a1\_train,}
+                     \AttributeTok{k =}\NormalTok{ i,}
+                     \AttributeTok{kernel =} \StringTok{"rectangular"}
+\NormalTok{  )}
+\NormalTok{  valid\_kknn\_inner }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                     \AttributeTok{train =}\NormalTok{ a1\_train,}
+                     \AttributeTok{test =}\NormalTok{ a1\_valid,}
+                     \AttributeTok{k =}\NormalTok{ i,}
+                     \AttributeTok{kernel =} \StringTok{"rectangular"}
+\NormalTok{  )}
+
+\NormalTok{  cm\_train\_inner }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(train\_kknn\_inner))}
+\NormalTok{  n\_errors\_train\_inner }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(cm\_train\_inner))}
+\NormalTok{  misclass\_rate\_train\_inner }\OtherTok{\textless{}{-}}\NormalTok{ n\_errors\_train\_inner}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_train)}
+
+\NormalTok{  cm\_valid\_inner }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_valid}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(valid\_kknn\_inner))}
+\NormalTok{  n\_errors\_valid\_inner }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_valid) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(cm\_valid\_inner))}
+\NormalTok{  misclass\_rate\_valid\_inner }\OtherTok{\textless{}{-}}\NormalTok{ n\_errors\_valid\_inner}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_valid)}
+
+\NormalTok{  a1\_misclass\_train[i] }\OtherTok{\textless{}{-}}\NormalTok{ misclass\_rate\_train\_inner}
+\NormalTok{  a1\_misclass\_valid[i] }\OtherTok{\textless{}{-}}\NormalTok{ misclass\_rate\_valid\_inner}
+\NormalTok{\}}
+
+\CommentTok{\# Plot training and validation misclassification errors against K}
+\NormalTok{a1\_plot\_misclass }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{()\{}
+  \FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1\_misclass\_train, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{,}
+       \AttributeTok{ylim =} \FunctionTok{range}\NormalTok{(}\FunctionTok{c}\NormalTok{(a1\_misclass\_train, a1\_misclass\_valid)),}
+       \AttributeTok{xlab =} \StringTok{"K"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Misclassification error"}\NormalTok{)}
+  \FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1\_misclass\_valid, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
+  \FunctionTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"Training"}\NormalTok{, }\StringTok{"Validation"}\NormalTok{),}
+         \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{lty =} \DecValTok{1}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Optimal K = lowest validation error}
+\NormalTok{a1\_k\_opt }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a1\_misclass\_valid)}
+\NormalTok{a1\_k\_opt}
+
+\CommentTok{\# test error for optimal K}
+\NormalTok{a1\_test\_kknn\_opt }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                      \AttributeTok{train =}\NormalTok{ a1\_train,}
+                      \AttributeTok{test =}\NormalTok{ a1\_test,}
+                      \AttributeTok{k =}\NormalTok{ a1\_k\_opt,}
+                      \AttributeTok{kernel =} \StringTok{"rectangular"}\NormalTok{)}
+
+\NormalTok{a1\_cm\_test\_opt }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_test\_kknn\_opt))}
+\NormalTok{a1\_misclass\_test\_opt }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(a1\_test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_test\_opt))) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(a1\_test)}
+
+\CommentTok{\# Compare the three errors for optimal K}
+\FunctionTok{c}\NormalTok{(}\AttributeTok{train =}\NormalTok{ a1\_misclass\_train[a1\_k\_opt],}
+  \AttributeTok{valid =}\NormalTok{ a1\_misclass\_valid[a1\_k\_opt],}
+  \AttributeTok{test =}\NormalTok{ a1\_misclass\_test\_opt)}
+
+\CommentTok{\#k\_opt = 3.}
+\CommentTok{\# train      valid       test}
+\CommentTok{\# 0.01151230 0.02513089 0.02403344}
+
+\CommentTok{\# 5.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\NormalTok{a1\_ce\_valid }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{)\{}
+\NormalTok{  valid\_kknn\_ce }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                           \AttributeTok{train =}\NormalTok{ a1\_train,}
+                           \AttributeTok{test =}\NormalTok{ a1\_valid,}
+                           \AttributeTok{k =}\NormalTok{ i,}
+                           \AttributeTok{kernel =} \StringTok{"rectangular"}
+\NormalTok{  )}
+
+\NormalTok{  a1\_prob }\OtherTok{\textless{}{-}}\NormalTok{ valid\_kknn\_ce}\SpecialCharTok{$}\NormalTok{prob}
+
+  \CommentTok{\#column number for the true number in each row}
+\NormalTok{  true\_col }\OtherTok{\textless{}{-}} \FunctionTok{match}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(a1\_valid}\SpecialCharTok{$}\NormalTok{V65), }\FunctionTok{colnames}\NormalTok{(a1\_prob))}
+
+  \CommentTok{\#Probability the model gave the true number, one value per image}
+\NormalTok{  p\_true }\OtherTok{\textless{}{-}}\NormalTok{ a1\_prob[}\FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(a1\_valid), true\_col)]}
+
+  \CommentTok{\#cross{-}entropy, mean over validation images}
+\NormalTok{  a1\_ce\_valid[i] }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(p\_true }\SpecialCharTok{+} \FloatTok{1e{-}15}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# Plot validation cross{-}entropy against K}
+\NormalTok{a1\_plot\_ce }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{()\{}
+  \FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+  \FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1\_ce\_valid, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{,}
+       \AttributeTok{xlab =} \StringTok{"K"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Cross{-}entropy (validation)"}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{a1\_k\_opt\_ce }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a1\_ce\_valid)}
+\NormalTok{a1\_k\_opt\_ce}
+
+\CommentTok{\# optimal value: K = 6}
+\end{Highlighting}
+\end{Shaded}
 
 \subsection{Assignment 2}\label{assignment-2}
 
