@@ -49,9 +49,46 @@ library(patchwork)
 # Assignment 3 - Logistic regression and Basis Function Expansion
 {{< include sections/lab1_assignment3.qmd >}}
 
+
 \clearpage
+
+
 # Theory
 <!-- {{< include sections/lab1_theory.qmd >}} -->
+
+## Why can it be important to consider various probability thresholds in the classification problems?
+
+Different classifcation threshholds (r) affect trade-off between false positives and false negatives. This can be particulary important when the consequences of the different classification errors are not equally severe. For example, lowering the threshold in disease detection can identify more patients with the disease, but at the cost of more false positives.
+
+The textbook show example of this on page 92-93, example 4.5. It compares a default threshold of 0.5 with 0.15 for detecting thyroid disease.
+
+
+## What ways of collecting correct values of the target variable for the supervised learning problems are mentioned in the book? 
+
+## How can one express the cost function of the linear regression in the matrix form, according to the book?
+
+The cost function for linear regression with squared error loss can be expressed in matrix form as,
+
+$$
+J(\boldsymbol{\theta})
+= \frac{1}{n}\|X\boldsymbol{\theta}-\mathbf{y}\|_2^2,
+$$
+
+where $X$ is the design matrix, $\boldsymbol{\theta}$ is the
+vector of regression coefficients, $\mathbf{y}$ is the vector
+of observed responses, and $n$ is the number of observations.
+The cost function represents the mean squared error between
+the predicted and observed values and is minimized when
+estimating the regression coefficients.
+
+The textbook show this on page 45, equation (3.11)
+
+
+# Statement of Contribution
+
+In Assignment 1, Jonas Hautamäki Bengston was primarily responsible for both the code implementation and the written report. Jonas Danielsson was responsible for the code implementation and report for Assignment 2, while Kerstin Arbring was responsible for the corresponding work in Assignment 3.
+
+Following the initial completion of Assignments 1–3, the code and written reports were circulated among the group members for one round of refinement and one round of review of text. Assignment 4 (Theory) was drafted collaboratively by all three group members. The results and conclusions from all assignments were discussed collectively.
 
 \clearpage
 
