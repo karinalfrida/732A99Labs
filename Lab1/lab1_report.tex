@@ -397,6 +397,8 @@ X(X^\top X+\lambda I)^{-1}X^\top
 \right].
 \]
 
+\pagebreak
+
 \subsection{Comparison of penalty
 strengths}\label{comparison-of-penalty-strengths}
 
@@ -661,7 +663,7 @@ function expansion.}
 \begin{Highlighting}[]
 \CommentTok{\# Lab 1, Assignment 2 {-} Linear regression and ridge regression}
 \CommentTok{\#}
-\CommentTok{\# Sourced by lab1\_assignment2.qmd. Paths are relative to Lab1/.}
+\CommentTok{\# Sourced by sections/lab1\_assignment2.qmd. Paths are relative to Lab1/.}
 \CommentTok{\# Prefix objects with a2\_ so they don\textquotesingle{}t clash with other assignments\textquotesingle{}}
 \CommentTok{\# scripts when everything is sourced into the combined report.}
 
@@ -819,6 +821,44 @@ function expansion.}
 \CommentTok{\# coefficients side by side {-}{-} linear regression and ridge per lambda}
 \NormalTok{a2\_ridge\_coefs }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{lm =} \FunctionTok{coef}\NormalTok{(a2\_lm),}
                         \FunctionTok{sapply}\NormalTok{(a2\_ridge\_fits, \textbackslash{}(f) f}\SpecialCharTok{$}\NormalTok{theta))}
+
+\CommentTok{\# Values used in report {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+
+\DocumentationTok{\#\# fixing name formating (removing backtick formating from factors)}
+\NormalTok{a2\_significant\_names }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"\textasciigrave{}"}\NormalTok{, }\StringTok{""}\NormalTok{, a2\_lm\_signif, }\AttributeTok{fixed =} \ConstantTok{TRUE}\NormalTok{)}
+
+\DocumentationTok{\#\# significant coef print}
+\NormalTok{a2\_significance\_sentence }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}
+  \FunctionTok{length}\NormalTok{(a2\_significant\_names),}
+  \StringTok{" coefficients were significant at the 5\% level: "}\NormalTok{,}
+  \FunctionTok{paste}\NormalTok{(a2\_significant\_names, }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{), }\StringTok{"."}
+\NormalTok{)}
+
+\CommentTok{\# print values}
+\NormalTok{a2\_sigma\_mle }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(a2\_lm)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{a2\_best\_idx }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{test\_mse)}
+\NormalTok{a2\_best\_lambda }\OtherTok{\textless{}{-}}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{lambda[a2\_best\_idx]}
+\NormalTok{a2\_best\_test\_mse }\OtherTok{\textless{}{-}}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{test\_mse[a2\_best\_idx]}
+
+\CommentTok{\# Final comparision table}
+\NormalTok{a2\_comparison }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{Model =} \StringTok{"OLS"}\NormalTok{,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Training MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_lm\_train\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Test MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_lm\_test\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Effective df}\StringTok{\textasciigrave{}} \OtherTok{=} \FunctionTok{ncol}\NormalTok{(a2\_X\_train),}
+    \StringTok{\textasciigrave{}}\AttributeTok{Sigma}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_sigma\_mle,}
+    \AttributeTok{check.names =} \ConstantTok{FALSE}
+\NormalTok{  ),}
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{Model =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Ridge (lambda = "}\NormalTok{, a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{lambda, }\StringTok{")"}\NormalTok{),}
+    \StringTok{\textasciigrave{}}\AttributeTok{Training MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{train\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Test MSE}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{test\_mse,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Effective df}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{df,}
+    \StringTok{\textasciigrave{}}\AttributeTok{Sigma}\StringTok{\textasciigrave{}} \OtherTok{=}\NormalTok{ a2\_ridge\_results}\SpecialCharTok{$}\NormalTok{sigma,}
+    \AttributeTok{check.names =} \ConstantTok{FALSE}
+\NormalTok{  )}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
