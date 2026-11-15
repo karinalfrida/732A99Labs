@@ -387,7 +387,7 @@ Table~\ref{tbl-a1-cm-train} and Table~\ref{tbl-a1-cm-test}.
 
 \begin{longtable}[]{@{}lrrrrrrrrrr@{}}
 
-\caption{\label{tbl-a1-cm-train}confusion matrix for the training data
+\caption{\label{tbl-a1-cm-train}Confusion matrix for the training data
 (rows = true digit, columns = predicted digit).}
 
 \tabularnewline
@@ -501,8 +501,8 @@ The two easiest cases were classified as 8 with high probability, and
 they are also easy to recognise visually: both show the characteristic
 shape of an 8 with two closed loops. The three hardest cases had low
 probabilities for the correct class and are hard to recognise even for a
-human. Two of them lok more like a 1 than an 8, since they are narrow
-and lack clear loops, and tht third could just as well be read as a 6.
+human. Two of them look more like a 1 than an 8, since they are narrow
+and lack clear loops, and the third could just as well be read as a 6.
 This suggests that the misclassifications are largely caused by unclear
 handwriting rather than by the model itself.
 
@@ -909,44 +909,44 @@ function expansion.}
 
 \CommentTok{\# 1. + 2.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 \CommentTok{\# Read and separate data}
-\NormalTok{a1.data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/optdigits.csv"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{FALSE}\NormalTok{)}
-\NormalTok{a1.data}\SpecialCharTok{$}\NormalTok{V65 }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(a1.data}\SpecialCharTok{$}\NormalTok{V65)}
-\NormalTok{a1.n }\OtherTok{=} \FunctionTok{dim}\NormalTok{(a1.data)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{a1\_data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/optdigits.csv"}\NormalTok{, }\AttributeTok{header =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{a1\_data}\SpecialCharTok{$}\NormalTok{V65 }\OtherTok{\textless{}{-}} \FunctionTok{as.factor}\NormalTok{(a1\_data}\SpecialCharTok{$}\NormalTok{V65)}
+\NormalTok{a1\_n }\OtherTok{=} \FunctionTok{dim}\NormalTok{(a1\_data)[}\DecValTok{1}\NormalTok{]}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
-\NormalTok{a1.id }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{a1.n, }\FunctionTok{floor}\NormalTok{(a1.n}\SpecialCharTok{*}\FloatTok{0.5}\NormalTok{))}
-\NormalTok{a1.train }\OtherTok{=}\NormalTok{ a1.data[a1.id, ]}
+\NormalTok{a1\_id }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{a1\_n, }\FunctionTok{floor}\NormalTok{(a1\_n}\SpecialCharTok{*}\FloatTok{0.5}\NormalTok{))}
+\NormalTok{a1\_train }\OtherTok{=}\NormalTok{ a1\_data[a1\_id, ]}
 
-\NormalTok{a1.id1 }\OtherTok{=} \FunctionTok{setdiff}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{a1.n, a1.id)}
+\NormalTok{a1\_id1 }\OtherTok{=} \FunctionTok{setdiff}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{a1\_n, a1\_id)}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
-\NormalTok{a1.id2 }\OtherTok{=} \FunctionTok{sample}\NormalTok{(a1.id1, }\FunctionTok{floor}\NormalTok{(a1.n}\SpecialCharTok{*}\FloatTok{0.25}\NormalTok{))}
-\NormalTok{a1.valid }\OtherTok{=}\NormalTok{ a1.data[a1.id2, ]}
+\NormalTok{a1\_id2 }\OtherTok{=} \FunctionTok{sample}\NormalTok{(a1\_id1, }\FunctionTok{floor}\NormalTok{(a1\_n}\SpecialCharTok{*}\FloatTok{0.25}\NormalTok{))}
+\NormalTok{a1\_valid }\OtherTok{=}\NormalTok{ a1\_data[a1\_id2, ]}
 
-\NormalTok{a1.id3 }\OtherTok{=} \FunctionTok{setdiff}\NormalTok{(a1.id1, a1.id2)}
-\NormalTok{a1.test }\OtherTok{=}\NormalTok{ a1.data[a1.id3, ]}
+\NormalTok{a1\_id3 }\OtherTok{=} \FunctionTok{setdiff}\NormalTok{(a1\_id1, a1\_id2)}
+\NormalTok{a1\_test }\OtherTok{=}\NormalTok{ a1\_data[a1\_id3, ]}
 \CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
-\NormalTok{a1.test.kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(}
+\NormalTok{a1\_test\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(}
 \NormalTok{  V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-  \AttributeTok{train =}\NormalTok{ a1.train,}
-  \AttributeTok{test =}\NormalTok{ a1.test,}
+  \AttributeTok{train =}\NormalTok{ a1\_train,}
+  \AttributeTok{test =}\NormalTok{ a1\_test,}
   \AttributeTok{k =} \DecValTok{30}\NormalTok{,}
   \AttributeTok{kernel =} \StringTok{"rectangular"}
 \NormalTok{)}
 
-\NormalTok{a1.train.kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-                   \AttributeTok{train =}\NormalTok{ a1.train,}
-                   \AttributeTok{test =}\NormalTok{ a1.train,}
+\NormalTok{a1\_train\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                   \AttributeTok{train =}\NormalTok{ a1\_train,}
+                   \AttributeTok{test =}\NormalTok{ a1\_train,}
                    \AttributeTok{k =} \DecValTok{30}\NormalTok{,}
                    \AttributeTok{kernel =} \StringTok{"rectangular"}
 \NormalTok{                   )}
 
-\NormalTok{a1.cm.test }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1.test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1.test.kknn))}
-\NormalTok{a1.n.errors.test }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1.test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1.cm.test))}
-\NormalTok{a1.misclass.rate.test }\OtherTok{\textless{}{-}}\NormalTok{ a1.n.errors.test}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1.test)}
+\NormalTok{a1\_cm\_test }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_test\_kknn))}
+\NormalTok{a1\_n\_errors\_test }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_test))}
+\NormalTok{a1\_misclass\_rate\_test }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_test}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_test)}
 
-\NormalTok{a1.cm.train }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1.train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1.train.kknn))}
-\NormalTok{a1.n.errors.train }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1.train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1.cm.train))}
-\NormalTok{a1.misclass.rate.train }\OtherTok{\textless{}{-}}\NormalTok{ a1.n.errors.train}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1.train)}
+\NormalTok{a1\_cm\_train }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_train\_kknn))}
+\NormalTok{a1\_n\_errors\_train }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_train))}
+\NormalTok{a1\_misclass\_rate\_train }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_train}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_train)}
 
 \CommentTok{\#Comment: The 30{-}NN classifier has misclassification rates of 4.5\% (training)}
 \CommentTok{\#and 5.3\% (test), so about 95\% of the digits are classified correctly. That}
@@ -960,27 +960,24 @@ function expansion.}
 \CommentTok{\# 3.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
 \CommentTok{\# Row \# in train for all real 8\textquotesingle{}s}
-\NormalTok{a1.index8 }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(a1.train}\SpecialCharTok{$}\NormalTok{V65 }\SpecialCharTok{==} \StringTok{"8"}\NormalTok{)}
+\NormalTok{a1\_index8 }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(a1\_train}\SpecialCharTok{$}\NormalTok{V65 }\SpecialCharTok{==} \StringTok{"8"}\NormalTok{)}
 
 \CommentTok{\# Probability for the class "8" for just those rows}
-\NormalTok{a1.prob8 }\OtherTok{\textless{}{-}}\NormalTok{ a1.train.kknn}\SpecialCharTok{$}\NormalTok{prob[a1.index8, }\StringTok{"8"}\NormalTok{]}
+\NormalTok{a1\_prob8 }\OtherTok{\textless{}{-}}\NormalTok{ a1\_train\_kknn}\SpecialCharTok{$}\NormalTok{prob[a1\_index8, }\StringTok{"8"}\NormalTok{]}
 
 \CommentTok{\# Sort from lowest to highest probability and translate to rownumber in train}
-\NormalTok{a1.index8.sorted }\OtherTok{\textless{}{-}}\NormalTok{ a1.index8[}\FunctionTok{order}\NormalTok{(a1.prob8)]}
+\NormalTok{a1\_index8\_sorted }\OtherTok{\textless{}{-}}\NormalTok{ a1\_index8[}\FunctionTok{order}\NormalTok{(a1\_prob8)]}
 
-\NormalTok{a1.hardest }\OtherTok{\textless{}{-}} \FunctionTok{head}\NormalTok{(a1.index8.sorted, }\DecValTok{3}\NormalTok{) }\CommentTok{\# 3 lowest probabilities}
-\NormalTok{a1.easiest }\OtherTok{\textless{}{-}} \FunctionTok{tail}\NormalTok{(a1.index8.sorted, }\DecValTok{2}\NormalTok{) }\CommentTok{\# 2 highest probabilities}
+\NormalTok{a1\_hardest }\OtherTok{\textless{}{-}} \FunctionTok{head}\NormalTok{(a1\_index8\_sorted, }\DecValTok{3}\NormalTok{) }\CommentTok{\# 3 lowest probabilities}
+\NormalTok{a1\_easiest }\OtherTok{\textless{}{-}} \FunctionTok{tail}\NormalTok{(a1\_index8\_sorted, }\DecValTok{2}\NormalTok{) }\CommentTok{\# 2 highest probabilities}
 
 \CommentTok{\# Make row in train to 8x8{-}matrix and plot it}
-\NormalTok{a1.plot\_digit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(row, title)\{}
-\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(a1.train[row, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{64}\NormalTok{]), }\AttributeTok{nrow =} \DecValTok{8}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{8}\NormalTok{, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{a1\_plot\_digit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(row, title)\{}
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(a1\_train[row, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{64}\NormalTok{]), }\AttributeTok{nrow =} \DecValTok{8}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{8}\NormalTok{, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{)}
 \NormalTok{  m }\OtherTok{\textless{}{-}}\NormalTok{ m[}\DecValTok{8}\SpecialCharTok{:}\DecValTok{1}\NormalTok{, ] }\CommentTok{\# turn rows, heatmap plots first row on the bottom}
   \FunctionTok{heatmap}\NormalTok{(m, }\AttributeTok{Colv =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{Rowv =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{labRow =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{labCol =} \ConstantTok{NA}\NormalTok{,}
           \AttributeTok{margins =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
 \NormalTok{\}}
-
-\ControlFlowTok{for}\NormalTok{ (r }\ControlFlowTok{in}\NormalTok{ a1.easiest) }\FunctionTok{a1.plot\_digit}\NormalTok{(r, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Easy, p ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(a1.train.kknn}\SpecialCharTok{$}\NormalTok{prob[r, }\StringTok{"8"}\NormalTok{], }\DecValTok{2}\NormalTok{)))}
-\ControlFlowTok{for}\NormalTok{ (r }\ControlFlowTok{in}\NormalTok{ a1.hardest) }\FunctionTok{a1.plot\_digit}\NormalTok{(r, }\FunctionTok{paste}\NormalTok{(}\StringTok{"Hard, p ="}\NormalTok{, }\FunctionTok{round}\NormalTok{(a1.train.kknn}\SpecialCharTok{$}\NormalTok{prob[r, }\StringTok{"8"}\NormalTok{], }\DecValTok{2}\NormalTok{)))}
 
 \CommentTok{\# The easy ones are easy to tell they are 8\textquotesingle{}s and the hard ones are difficult.}
 \CommentTok{\# 2 of the hard ones seem more likely to me to be ones and one of them could}
@@ -988,96 +985,100 @@ function expansion.}
 
 \CommentTok{\# 4.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
-\NormalTok{a1.misclass.train }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
-\NormalTok{a1.misclass.valid }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+\NormalTok{a1\_misclass\_train }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+\NormalTok{a1\_misclass\_valid }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
 
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{)\{}
-\NormalTok{  train.kknn.inner }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-                     \AttributeTok{train =}\NormalTok{ a1.train,}
-                     \AttributeTok{test =}\NormalTok{ a1.train,}
+\NormalTok{  train\_kknn\_inner }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                     \AttributeTok{train =}\NormalTok{ a1\_train,}
+                     \AttributeTok{test =}\NormalTok{ a1\_train,}
                      \AttributeTok{k =}\NormalTok{ i,}
                      \AttributeTok{kernel =} \StringTok{"rectangular"}
 \NormalTok{  )}
-\NormalTok{  valid.kknn.inner }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-                     \AttributeTok{train =}\NormalTok{ a1.train,}
-                     \AttributeTok{test =}\NormalTok{ a1.valid,}
+\NormalTok{  valid\_kknn\_inner }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                     \AttributeTok{train =}\NormalTok{ a1\_train,}
+                     \AttributeTok{test =}\NormalTok{ a1\_valid,}
                      \AttributeTok{k =}\NormalTok{ i,}
                      \AttributeTok{kernel =} \StringTok{"rectangular"}
 \NormalTok{  )}
 
-\NormalTok{  cm.train.inner }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1.train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(train.kknn.inner))}
-\NormalTok{  n.errors.train.inner }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1.train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(cm.train.inner))}
-\NormalTok{  misclass.rate.train.inner }\OtherTok{\textless{}{-}}\NormalTok{ n.errors.train.inner}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1.train)}
+\NormalTok{  cm\_train\_inner }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(train\_kknn\_inner))}
+\NormalTok{  n\_errors\_train\_inner }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(cm\_train\_inner))}
+\NormalTok{  misclass\_rate\_train\_inner }\OtherTok{\textless{}{-}}\NormalTok{ n\_errors\_train\_inner}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_train)}
 
-\NormalTok{  cm.valid.inner }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1.valid}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(valid.kknn.inner))}
-\NormalTok{  n.errors.valid.inner }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1.valid) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(cm.valid.inner))}
-\NormalTok{  misclass.rate.valid.inner }\OtherTok{\textless{}{-}}\NormalTok{ n.errors.valid.inner}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1.valid)}
+\NormalTok{  cm\_valid\_inner }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_valid}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(valid\_kknn\_inner))}
+\NormalTok{  n\_errors\_valid\_inner }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_valid) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(cm\_valid\_inner))}
+\NormalTok{  misclass\_rate\_valid\_inner }\OtherTok{\textless{}{-}}\NormalTok{ n\_errors\_valid\_inner}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_valid)}
 
-\NormalTok{  a1.misclass.train[i] }\OtherTok{\textless{}{-}}\NormalTok{ misclass.rate.train.inner}
-\NormalTok{  a1.misclass.valid[i] }\OtherTok{\textless{}{-}}\NormalTok{ misclass.rate.valid.inner}
+\NormalTok{  a1\_misclass\_train[i] }\OtherTok{\textless{}{-}}\NormalTok{ misclass\_rate\_train\_inner}
+\NormalTok{  a1\_misclass\_valid[i] }\OtherTok{\textless{}{-}}\NormalTok{ misclass\_rate\_valid\_inner}
 \NormalTok{\}}
 
-\FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1.misclass.train, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{,}
-     \AttributeTok{ylim =} \FunctionTok{range}\NormalTok{(}\FunctionTok{c}\NormalTok{(a1.misclass.train, a1.misclass.valid)),}
-     \AttributeTok{xlab =} \StringTok{"K"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Misclassification error"}\NormalTok{)}
-\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1.misclass.valid, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
-\FunctionTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"Training"}\NormalTok{, }\StringTok{"Validation"}\NormalTok{),}
-       \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{lty =} \DecValTok{1}\NormalTok{)}
+\CommentTok{\# Plot training and validation misclassification errors against K}
+\NormalTok{a1\_plot\_misclass }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{()\{}
+  \FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1\_misclass\_train, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{,}
+       \AttributeTok{ylim =} \FunctionTok{range}\NormalTok{(}\FunctionTok{c}\NormalTok{(a1\_misclass\_train, a1\_misclass\_valid)),}
+       \AttributeTok{xlab =} \StringTok{"K"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Misclassification error"}\NormalTok{)}
+  \FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1\_misclass\_valid, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
+  \FunctionTok{legend}\NormalTok{(}\StringTok{"bottomright"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{c}\NormalTok{(}\StringTok{"Training"}\NormalTok{, }\StringTok{"Validation"}\NormalTok{),}
+         \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{lty =} \DecValTok{1}\NormalTok{)}
+\NormalTok{\}}
 
-
-\CommentTok{\# Optimmal K = lowest validation error}
-\NormalTok{a1.k.opt }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a1.misclass.valid)}
-\NormalTok{a1.k.opt}
+\CommentTok{\# Optimal K = lowest validation error}
+\NormalTok{a1\_k\_opt }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a1\_misclass\_valid)}
+\NormalTok{a1\_k\_opt}
 
 \CommentTok{\# test error for optimal K}
-\NormalTok{a1.test.kknn.opt }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-                      \AttributeTok{train =}\NormalTok{ a1.train,}
-                      \AttributeTok{test =}\NormalTok{ a1.test,}
-                      \AttributeTok{k =}\NormalTok{ a1.k.opt,}
+\NormalTok{a1\_test\_kknn\_opt }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                      \AttributeTok{train =}\NormalTok{ a1\_train,}
+                      \AttributeTok{test =}\NormalTok{ a1\_test,}
+                      \AttributeTok{k =}\NormalTok{ a1\_k\_opt,}
                       \AttributeTok{kernel =} \StringTok{"rectangular"}\NormalTok{)}
 
-\NormalTok{a1.cm.test.opt }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1.test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1.test.kknn.opt))}
-\NormalTok{a1.misclass.test.opt }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(a1.test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1.cm.test.opt))) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(a1.test)}
+\NormalTok{a1\_cm\_test\_opt }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_test\_kknn\_opt))}
+\NormalTok{a1\_misclass\_test\_opt }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(a1\_test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_test\_opt))) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(a1\_test)}
 
 \CommentTok{\# Compare the three errors for optimal K}
-\FunctionTok{c}\NormalTok{(}\AttributeTok{train =}\NormalTok{ a1.misclass.train[a1.k.opt],}
-  \AttributeTok{valid =}\NormalTok{ a1.misclass.valid[a1.k.opt],}
-  \AttributeTok{test =}\NormalTok{ a1.misclass.test.opt)}
+\FunctionTok{c}\NormalTok{(}\AttributeTok{train =}\NormalTok{ a1\_misclass\_train[a1\_k\_opt],}
+  \AttributeTok{valid =}\NormalTok{ a1\_misclass\_valid[a1\_k\_opt],}
+  \AttributeTok{test =}\NormalTok{ a1\_misclass\_test\_opt)}
 
-\CommentTok{\#k.opt = 3.}
+\CommentTok{\#k\_opt = 3.}
 \CommentTok{\# train      valid       test}
 \CommentTok{\# 0.01151230 0.02513089 0.02403344}
 
 \CommentTok{\# 5.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
-\NormalTok{a1.ce.valid }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
+\NormalTok{a1\_ce\_valid }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{30}\NormalTok{)}
 
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{)\{}
-\NormalTok{  valid.kknn.ce }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-                           \AttributeTok{train =}\NormalTok{ a1.train,}
-                           \AttributeTok{test =}\NormalTok{ a1.valid,}
+\NormalTok{  valid\_kknn\_ce }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                           \AttributeTok{train =}\NormalTok{ a1\_train,}
+                           \AttributeTok{test =}\NormalTok{ a1\_valid,}
                            \AttributeTok{k =}\NormalTok{ i,}
                            \AttributeTok{kernel =} \StringTok{"rectangular"}
 \NormalTok{  )}
 
-\NormalTok{  a1.prob }\OtherTok{\textless{}{-}}\NormalTok{ valid.kknn.ce}\SpecialCharTok{$}\NormalTok{prob}
+\NormalTok{  a1\_prob }\OtherTok{\textless{}{-}}\NormalTok{ valid\_kknn\_ce}\SpecialCharTok{$}\NormalTok{prob}
 
   \CommentTok{\#column number for the true number in each row}
-\NormalTok{  true.col }\OtherTok{\textless{}{-}} \FunctionTok{match}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(a1.valid}\SpecialCharTok{$}\NormalTok{V65), }\FunctionTok{colnames}\NormalTok{(a1.prob))}
+\NormalTok{  true\_col }\OtherTok{\textless{}{-}} \FunctionTok{match}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(a1\_valid}\SpecialCharTok{$}\NormalTok{V65), }\FunctionTok{colnames}\NormalTok{(a1\_prob))}
 
-  \CommentTok{\#Probability the model gave the true number, one bit per image}
-\NormalTok{  p.true }\OtherTok{\textless{}{-}}\NormalTok{ a1.prob[}\FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(a1.valid), true.col)]}
+  \CommentTok{\#Probability the model gave the true number, one value per image}
+\NormalTok{  p\_true }\OtherTok{\textless{}{-}}\NormalTok{ a1\_prob[}\FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(a1\_valid), true\_col)]}
 
   \CommentTok{\#cross{-}entropy, mean over validation images}
-\NormalTok{  a1.ce.valid[i] }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(p.true }\SpecialCharTok{+} \FloatTok{1e{-}15}\NormalTok{))}
+\NormalTok{  a1\_ce\_valid[i] }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\FunctionTok{mean}\NormalTok{(}\FunctionTok{log}\NormalTok{(p\_true }\SpecialCharTok{+} \FloatTok{1e{-}15}\NormalTok{))}
 \NormalTok{\}}
 
+\CommentTok{\# Plot validation cross{-}entropy against K}
+\NormalTok{a1\_plot\_ce }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{()\{}
+  \FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+  \FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1\_ce\_valid, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{,}
+       \AttributeTok{xlab =} \StringTok{"K"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Cross{-}entropy (validation)"}\NormalTok{)}
+\NormalTok{\}}
 
-\FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{30}\NormalTok{, a1.ce.valid, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{,}
-     \AttributeTok{xlab =} \StringTok{"K"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Cross{-}entropy (validation)"}\NormalTok{)}
-
-\NormalTok{a1.k.opt.ce }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a1.ce.valid)}
-\NormalTok{a1.k.opt.ce}
-
+\NormalTok{a1\_k\_opt\_ce }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(a1\_ce\_valid)}
+\NormalTok{a1\_k\_opt\_ce}
 
 \CommentTok{\# optimal value: K = 6}
 \end{Highlighting}
