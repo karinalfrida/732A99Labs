@@ -33,6 +33,7 @@ execute:
 #| include: false
 library(tidyverse)
 library(patchwork)
+library(kknn)
 ```
 
 \justifying

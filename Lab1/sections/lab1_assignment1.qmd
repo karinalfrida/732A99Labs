@@ -25,16 +25,18 @@ and the resulting confusion matrices are shown in @tbl-a1-cm-train and
 @tbl-a1-cm-test.
 
 ```{r}
+#| label: tbl-a1-cm-train
+#| tbl-cap: "Confusion matrix for the training data (rows = true digit, columns = predicted digit)."
+knitr::kable(a1_cm_train)
+```
+
+
+```{r}
 #| label: tbl-a1-cm-test
 #| tbl-cap: "Confusion matrix for the test data (rows = true digit, columns = predicted digit)."
 knitr::kable(a1_cm_test)
 ```
 
-```{r}
-#| label: tbl-a1-cm-train
-#| tbl-cap: "Confusion matrix for the training data (rows = true digit, columns = predicted digit)."
-knitr::kable(a1_cm_train)
-```
 
 The misclassification error was `r round(a1_misclass_rate_train, 4)` for the training data and `r round(a1_misclass_rate_test, 4)` for the test data. About 95% of the digits are classified correctly, which is good overall
 quality, and the small gap between training and test error suggests little

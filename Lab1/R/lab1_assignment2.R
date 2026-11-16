@@ -5,8 +5,8 @@
 # scripts when everything is sourced into the combined report.
 
 # Load packages ---------------------------------------------------------------
-require(tidyverse)
-require(caret)
+# require(tidyverse)
+
 
 # read data -------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ a2_train_raw <- a2_data[id, ]
 a2_test_raw  <- a2_data[-id, ]
 
 # scale with the TRAINING means and sds, also for the test data, so that no
-# information from the test set leaks into the model.
+# information from the test set leaks into the training of the model.
 #
 # motor_UPDRS is scaled too (centred at 0), which is why no intercept is needed.
 a2_means <- colMeans(a2_train_raw)
@@ -89,20 +89,20 @@ a2_ridge <- function(theta, sigma, lambda) {
 # 3c. optimal theta and sigma for a given lambda, using optim(method = "BFGS")
 #
 # optim() minimises a function of ONE parameter vector (in this case 'par'),
-# so theta (16 values) and sigma are packed together:
-# AKA par = c(theta, log(sigma)). One vector.
+# so theta (16 values) and sigma are packed together,
+# i.e.,  par = c(theta, log(sigma)). One vector.
 a2_ridge_opt <- function(lambda) {
-  # numeber of paramaters
+  # number of parameters
   p <- ncol(a2_X_train)
 
   # objective -- function to use in optim (a function to be minimized)
-  # Unpacks par and evaluate the ridge function from 3b
+  # Unpacks par and evaluates the ridge function from 3b
   objective <- function(par) {
     theta <- par[1:p]
     sigma <- exp(par[p + 1])
     # returns minus log-likelihood of the training data + ridge penalty
     # (the value optim minimises)
-    a2_ridge(theta, sigma, lambda)
+    return(a2_ridge(theta, sigma, lambda))
   }
 
   # starting values: theta = 0, sigma = 1 (log(1) = 0)
