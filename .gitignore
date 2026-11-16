@@ -13,9 +13,5 @@
 *.fdb_latexmk
 *.synctex.gz
 
-# Quarto-generated LaTeX
-labreport.tex
-lab1_assignment3.tex
-
 # Quarto-generated figure directories
 *_files/

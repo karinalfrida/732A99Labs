@@ -6,22 +6,26 @@ format:
     documentclass: article
     include-in-header: lab1_report_preamble.tex
     pdf-engine: xelatex
-    keep-tex: true
+    keep-tex: false
     toc: false
     lot: false
     lof: false
     number-sections: true
     number-depth: 3 # change to 2 if preferable
     geometry:
-      - margin=2.5cm # symmetrical
+      - margin=2.5cm     # symmetrical
   docx: default 
   html:
     toc: true
 execute:
     echo: false          # (false in final version)
     warning: false       # (false in final version)
-    message: fasle       # (false in final version)
+    message: false       # (false in final version)
+editor: 
+  markdown:
+    wrap: 72
 ---
+
 \makereportfrontpage
 
 \clearpage
@@ -39,69 +43,109 @@ library(kknn)
 \justifying
 
 # Assignment 1
- {{< include sections/lab1_assignment1.qmd >}}
 
+{{< include sections/lab1_assignment1.qmd >}}
 
 \clearpage
+
 # Assignment 2 - Linear regression and ridge regression
+
 {{< include sections/lab1_assignment2.qmd >}}
 
 \clearpage
-# Assignment 3 - Logistic regression and Basis Function Expansion
-{{< include sections/lab1_assignment3.qmd >}}
 
+# Assignment 3 - Logistic regression and Basis Function Expansion
+
+{{< include sections/lab1_assignment3.qmd >}}
 
 \clearpage
 
-
 # Theory
+
 <!-- {{< include sections/lab1_theory.qmd >}} -->
 
 ## Why can it be important to consider various probability thresholds in the classification problems?
 
-Different classifcation threshholds (r) affect trade-off between false positives and false negatives. This can be particulary important when the consequences of the different classification errors are not equally severe. For example, lowering the threshold in disease detection can identify more patients with the disease, but at the cost of more false positives.
+Different classifcation threshholds (r) affect trade-off between false
+positives and false negatives. This can be particulary important when
+the consequences of the different classification errors are not equally
+severe. For example, lowering the threshold in disease detection can
+identify more patients with the disease, but at the cost of more false
+positives.
 
-The textbook show example of this on page 92-93, example 4.5. It compares a default threshold of 0.5 with 0.15 for detecting thyroid disease.
+The preliminary 2026 pdf version of the book (Lindholm et al. 2022) shows example of this on page 92-93, example 4.5. It compares a default threshold of 0.5 with 0.15 for detecting thyroid
+disease.
 
+## What ways of collecting correct values of the target variable for the supervised learning problems are mentioned in the book?
 
-## What ways of collecting correct values of the target variable for the supervised learning problems are mentioned in the book? 
+From the preliminary 2026 pdf version of the book (Lindholm et al. 2022) we found several ways of obtaining the target values:
+
+1.  Sometimes they are measured at the same time as inputs.
+
+2.  Sometimes a domain expert label the data by hand e.g when a
+    cardiologist assigns a diagnosis to each ECG signal (p.16)
+
+3.  They can come from automated computations, such as the density
+    functional theory simulations in the materials example.
+
+4.  They can come from historical records like past match results (p.6)
+
+5.  In self-supervised learning the targets are derived from the data
+    itself, e.g by predicting the next value in a time series (p.38-39)
 
 ## How can one express the cost function of the linear regression in the matrix form, according to the book?
 
-The cost function for linear regression with squared error loss can be expressed in matrix form as,
+The cost function for linear regression with squared error loss can be
+expressed in matrix form as,
 
 $$
 J(\boldsymbol{\theta})
 = \frac{1}{n}\|X\boldsymbol{\theta}-\mathbf{y}\|_2^2,
 $$
 
-where $X$ is the design matrix, $\boldsymbol{\theta}$ is the
-vector of regression coefficients, $\mathbf{y}$ is the vector
-of observed responses, and $n$ is the number of observations.
-The cost function represents the mean squared error between
-the predicted and observed values and is minimized when
-estimating the regression coefficients.
+where $X$ is the design matrix, $\boldsymbol{\theta}$ is the vector of
+regression coefficients, $\mathbf{y}$ is the vector of observed
+responses, and $n$ is the number of observations. The cost function
+represents the mean squared error between the predicted and observed
+values and is minimized when estimating the regression coefficients.
 
-The textbook show this on page 45, equation (3.11)
+The preliminary 2026 pdf version of the book (Lindholm et al. 2022) shows this on page 45, equation (3.11)
 
+\clearpage
 
 # Statement of Contribution
 
-In Assignment 1, Jonas Hautamäki Bengston was primarily responsible for both the code implementation and the written report. Jonas Danielsson was responsible for the code implementation and report for Assignment 2, while Kerstin Arbring was responsible for the corresponding work in Assignment 3.
+In Assignment 1, Jonas Hautamäki Bengston was primarily responsible for
+both the code implementation and the written report. Jonas Danielsson
+was responsible for the code implementation and report for Assignment 2,
+while Kerstin Arbring was responsible for the corresponding work in
+Assignment 3.
 
-Following the initial completion of Assignments 1–3, the code and written reports were circulated among the group members for one round of refinement and one round of review of text. Assignment 4 (Theory) was drafted collaboratively by all three group members. The results and conclusions from all assignments were discussed collectively.
+Following the initial completion of Assignments 1–3, the code and
+written reports were circulated among the group members for one round of
+refinement and one round of review of text. Assignment 4 (Theory) was
+drafted collaboratively by all three group members. The results and
+conclusions from all assignments were discussed collectively.
 
 \clearpage
 
 <!-- # References -->
 
 <!-- ::: {#refs} -->
+
 <!-- ::: -->
+
+# Reference
+
+Lindholm, A., Wahlström, N., Lindsten, F., & Schön, T. B. (2022). *Machine Learning: A First Course for Engineers and Scientists* (1st ed.). Cambridge University Press. https://doi.org/10.1017/9781108919371
+
 
 \clearpage
 
 <!-- Appendix -->
+
 \appendix
+
 # R code
 
 ## Assignment 1
@@ -137,7 +181,3 @@ Following the initial completion of Assignments 1–3, the code and written repo
 #| echo: true
 #| eval: false
 ```
-
-
-
-
