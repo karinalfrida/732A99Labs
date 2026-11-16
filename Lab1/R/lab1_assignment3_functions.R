@@ -2,7 +2,7 @@
 # function definitions
 
 ################################################################################
-#' A3_classifications_and_plots
+#' a3_classifications_and_plots
 #' Adds predictions based on provided predicted probabilities
 #' and decision threshold, and creates a plot colored by diabetes prediction
 #' and a plot colored by the predicion being correct or not,
@@ -19,16 +19,16 @@
 #'    columns (both logical) are added
 #' confusion_matrix
 #'    = confusion matrix for Actual vs Predicted diabetes
-#' correct_proportion
-#'    = Proportion of correctly classified observations
+#' training_accuracy
+#'    = Proportion of correctly classified observations (in the training data)
 #' training_misclass_error
-#'    = Proportion of misclassified observations
+#'    = Proportion of misclassified observations (in the training data)
 #' pred_plot
 #'    = Plot of Glucose vs Age, colored by Diabetes_predicion
 #' class_plot
 #'    = Plot of Glucose vs Age, colored by Correct_pred
 #'
-A3_classifications_and_plots <-
+a3_classifications_and_plots <-
   function(data_pred_prob, r, glucose_range, age_range){
 
   # adding prediction classifications to the data tibble
@@ -43,13 +43,13 @@ A3_classifications_and_plots <-
           Predicted = data_with_predictions$Diabetes_prediction)
 
   # proportion correctly classified observations
-  correct_proportion <-
+  training_accuracy <-
     sum(diag(logistic_confusion))/sum(logistic_confusion)
 
   # training misclassification error
   # = proportion of misclassified observations
   training_misclass_error <-
-    1 - correct_proportion
+    1 - training_accuracy
 
   # scatterplot colored by predictions
   pred_plot <-
@@ -101,14 +101,14 @@ A3_classifications_and_plots <-
 
   return(list(data_with_predictions = data_with_predictions,
               confusion_matrix = logistic_confusion,
-              correct_proportion = correct_proportion,
+              training_accuracy = training_accuracy,
               training_misclass_error = training_misclass_error,
               pred_plot = pred_plot,
               class_plot = class_plot))
 }
 
 ################################################################################
-#' A3_calculate_linear_boundary
+#' a3_calculate_linear_boundary
 #' Calculating a linear boundary intercept and slope
 #'
 #' @param theta0 Fitted intercept
@@ -117,7 +117,7 @@ A3_classifications_and_plots <-
 #'
 #' @returns A list with boundary intercept and slope
 #'
-A3_calculate_linear_boundary <- function(theta0, theta1, theta2, r){
+a3_calculate_linear_boundary <- function(theta0, theta1, theta2, r){
 
   # decision boundary line intercept and slope
   boundary_intercept <-  (log(r/(1-r))-theta0)/theta1
@@ -128,20 +128,20 @@ A3_calculate_linear_boundary <- function(theta0, theta1, theta2, r){
 }
 
 ################################################################################
-#' A3_add_linear_boundary
+#' a3_add_linear_boundary
 #' Adds a decision boundary line to the provided plots
 #'
 #' @param results_list List returned by
-#' A3_classifications_and_plots
+#' a3_classifications_and_plots
 #'
 #' @returns A list of two plots,
 #' one colored by diabetes prediction, and
 #' one colored by the predicion being correct or not
 #'
-A3_add_linear_boundary <-  function(results_list, r ){
+a3_add_linear_boundary <-  function(results_list, r ){
   # calculate intercept and slope for the straight line
   boundary <-
-    A3_calculate_linear_boundary(A3_theta0, A3_theta1, A3_theta2, r)
+    a3_calculate_linear_boundary(a3_theta0, a3_theta1, a3_theta2, r)
 
   # add line to prediction plot
   pred_plot_with_line <-

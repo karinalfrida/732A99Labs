@@ -1,4 +1,4 @@
-library(kknn)
+# library(kknn)
 
 # 1. + 2.-----------------------------------------------------------------------
 # Read and separate data
@@ -18,6 +18,13 @@ a1_id3 = setdiff(a1_id1, a1_id2)
 a1_test = a1_data[a1_id3, ]
 #-------------------------------------------------------------------------------
 
+a1_train_kknn <- kknn(V65 ~ .,
+                      train = a1_train,
+                      test = a1_train,
+                      k = 30,
+                      kernel = "rectangular"
+)
+
 a1_test_kknn <- kknn(
   V65 ~ .,
   train = a1_train,
@@ -26,29 +33,14 @@ a1_test_kknn <- kknn(
   kernel = "rectangular"
 )
 
-a1_train_kknn <- kknn(V65 ~ .,
-                   train = a1_train,
-                   test = a1_train,
-                   k = 30,
-                   kernel = "rectangular"
-                   )
-
-a1_cm_test <- table(true = a1_test$V65, predicted = fitted(a1_test_kknn))
-a1_n_errors_test <- nrow(a1_test) - sum(diag(a1_cm_test))
-a1_misclass_rate_test <- a1_n_errors_test/nrow(a1_test)
 
 a1_cm_train <- table(true = a1_train$V65, predicted = fitted(a1_train_kknn))
 a1_n_errors_train <- nrow(a1_train) - sum(diag(a1_cm_train))
 a1_misclass_rate_train <- a1_n_errors_train/nrow(a1_train)
 
-#Comment: The 30-NN classifier has misclassification rates of 4.5% (training)
-#and 5.3% (test), so about 95% of the digits are classified correctly. That
-#is good quality overall, and the small gap between the two errors suggests
-#little overfitting.
-
-#Digits 0, 2, 6, 7 are classified almost perfectly. The hardest digits are
-#4, 5, 8. Common confusions are 4 -> 7/9, 8 -> 1 and 5 -> 9, pairs that can
-#look alike in the low-resolution 8x8 images.
+a1_cm_test <- table(true = a1_test$V65, predicted = fitted(a1_test_kknn))
+a1_n_errors_test <- nrow(a1_test) - sum(diag(a1_cm_test))
+a1_misclass_rate_test <- a1_n_errors_test/nrow(a1_test)
 
 # 3.----------------------------------------------------------------------------
 
@@ -71,10 +63,6 @@ a1_plot_digit <- function(row, title){
   heatmap(m, Colv = NA, Rowv = NA, labRow = NA, labCol = NA,
           margins = c(0.5, 0.5))
 }
-
-# The easy ones are easy to tell they are 8's and the hard ones are difficult.
-# 2 of the hard ones seem more likely to me to be ones and one of them could
-# just as well be a six
 
 # 4.----------------------------------------------------------------------------
 

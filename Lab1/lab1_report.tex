@@ -353,38 +353,6 @@ using \texttt{kknn()}. Predictions were made for both the training and
 the test data, and the resulting confusion matrices are shown in
 Table~\ref{tbl-a1-cm-train} and Table~\ref{tbl-a1-cm-test}.
 
-{
-
-\begin{longtable}[]{@{}lrrrrrrrrrr@{}}
-
-\caption{\label{tbl-a1-cm-test}Confusion matrix for the test data (rows
-= true digit, columns = predicted digit).}
-
-\tabularnewline
-
-\toprule\noalign{}
-& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-0 & 77 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
-1 & 0 & 81 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 3 \\
-2 & 0 & 0 & 98 & 0 & 0 & 0 & 0 & 0 & 3 & 0 \\
-3 & 0 & 0 & 0 & 107 & 0 & 2 & 0 & 0 & 1 & 1 \\
-4 & 0 & 0 & 0 & 0 & 94 & 0 & 2 & 6 & 2 & 5 \\
-5 & 0 & 1 & 1 & 0 & 0 & 93 & 2 & 1 & 0 & 5 \\
-6 & 0 & 0 & 0 & 0 & 0 & 0 & 90 & 0 & 0 & 0 \\
-7 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 111 & 0 & 0 \\
-8 & 0 & 7 & 0 & 1 & 0 & 0 & 0 & 0 & 70 & 0 \\
-9 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 85 \\
-
-\end{longtable}
-
-}
-
-{
-
 \begin{longtable}[]{@{}lrrrrrrrrrr@{}}
 
 \caption{\label{tbl-a1-cm-train}Confusion matrix for the training data
@@ -411,7 +379,31 @@ Table~\ref{tbl-a1-cm-train} and Table~\ref{tbl-a1-cm-test}.
 
 \end{longtable}
 
-}
+\begin{longtable}[]{@{}lrrrrrrrrrr@{}}
+
+\caption{\label{tbl-a1-cm-test}Confusion matrix for the test data (rows
+= true digit, columns = predicted digit).}
+
+\tabularnewline
+
+\toprule\noalign{}
+& 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 77 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+1 & 0 & 81 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 3 \\
+2 & 0 & 0 & 98 & 0 & 0 & 0 & 0 & 0 & 3 & 0 \\
+3 & 0 & 0 & 0 & 107 & 0 & 2 & 0 & 0 & 1 & 1 \\
+4 & 0 & 0 & 0 & 0 & 94 & 0 & 2 & 6 & 2 & 5 \\
+5 & 0 & 1 & 1 & 0 & 0 & 93 & 2 & 1 & 0 & 5 \\
+6 & 0 & 0 & 0 & 0 & 0 & 0 & 90 & 0 & 0 & 0 \\
+7 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 111 & 0 & 0 \\
+8 & 0 & 7 & 0 & 1 & 0 & 0 & 0 & 0 & 70 & 0 \\
+9 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1 & 0 & 85 \\
+
+\end{longtable}
 
 The misclassification error was 0.045 for the training data and 0.0533
 for the test data. About 95\% of the digits are classified correctly,
@@ -585,7 +577,8 @@ regression}\label{data-and-ordinary-linear-regression}
 
 We predicted motor UPDRS from 16 voice characteristics in the
 Parkinson's dataset. The data were randomly divided into 3525 training
-observations (60\%) and 2350 test observations (40\%), using
+observations (60\%) and 2350 test observations (40\%), using using the
+partitioning code from Lecture 1a, slide 34, with
 \texttt{set.seed(12345)}. Both the predictors and response were
 standardized using the \emph{training-set} means and standard
 deviations, and the same transformation was applied to the test set.
@@ -649,8 +642,6 @@ The estimated optimal coefficients were used to predict responses by
 Table~\ref{tbl-a2-models} compares the training and test MSE and the
 effective degrees of freedom for the three specified penalty strengths.
 
-{
-
 \begin{longtable}[]{@{}lrrrr@{}}
 
 \caption{\label{tbl-a2-models}OLS and Ridge results. MSE values are on
@@ -671,27 +662,28 @@ Ridge (lambda = 1000) & 0.9211 & 0.9540 & 5.6439 & 0.9598 \\
 
 \end{longtable}
 
-}
-
-Among the specified penalties, \(\lambda = 100\) produced the lowest
-test MSE (0.9323), compared with 0.9354 for OLS. The lecture-defined
-effective degrees of freedom decreased from 13.86 at \(\lambda=1\) to
-5.64 at \(\lambda=1000\). Thus, stronger regularization reduced the
-model's effective flexibility, although all 16 coefficients remained in
-the model. The test MSE indicates which of these penalty strengths gave
-the best predictive performance on the held-out data.
+The test MSE indicates which of these penalty strengths gave the best
+predictive performance on the held-out data. Among the specified
+penalties, \(\lambda = 100\) produced the lowest test MSE (0.9323),
+compared with 0.9354 for OLS. The lecture-defined effective degrees of
+freedom decreased from 13.86 at \(\lambda=1\) to 5.64 at
+\(\lambda=1000\). Thus, stronger regularization reduced the model's
+effective flexibility, although all 16 coefficients remained in the
+model.
 
 \clearpage
 
 \section{Assignment 3 - Logistic regression and Basis Function
 Expansion}\label{assignment-3---logistic-regression-and-basis-function-expansion}
 
-Visualization of the data shows that there are values equal to zero in
-the measures, including plasma glucose which is one of the predictors of
-interest in this assignment. \texttt{Glucose\ =\ 0} is not a feasible
-value, but rather representing a missing value. All cases (n=5) with
-plasma glucose equal to zero were excluded from the data before the
-regression analysis.
+Visualization of the data with 767 cases shows that there are values
+equal to zero in the measures, including plasma glucose which is one of
+the predictors of interest in this assignment. \texttt{Glucose\ =\ 0} is
+not a feasible value, but rather representing a missing value. All cases
+(n= 5) with plasma glucose equal to zero were excluded from the data
+before the regression analysis.(There are ``impossible'' zeroes in the
+data for other predictors which not used in this analysis as well, but
+these cases are ijncluded this analysis.)
 
 \subsection{Scatterplot diabetes vs
 age}\label{scatterplot-diabetes-vs-age}
@@ -746,8 +738,10 @@ P(Y=1 \mid x_1,x_2) =
 0.0231x_2)}}
 }\end{equation}
 
-The training misclassification error for this model (with r = 0.5) is
-0.26, i.e approximately one out of four observations are misclassified.
+The \textbf{training misclassification} error for this model (with r =
+0.5) is 0.26 (corresponding to an \textbf{accuracy} of 0.74i.e
+approximately one out of four observations are misclassified. The AIC
+for the model is 781.91.
 
 \subsection{Scatterplot colored by
 predicions}\label{scatterplot-colored-by-predicions}
@@ -859,21 +853,23 @@ z_2 = x_1^3 x_2, \quad
 z_3 = x_1^2 x_2^2, \quad
 z_4 = x_1 x_2^3, \quad
 z_5 = x_2^4
-\] results in a much more complex model but a training misclassification
-error (with r = 0.5) of 0.24 which is slightly better than the linear
-model. The decision boundary is now not linear but curvilinear, changing
-the appearance of the Glucose vs Age scatterplot (see
-Figure~\ref{fig-extended-scatter}). The most obvious difference from the
-previous model is that older subjects are ``allowed'' to have higher
-plasma glucose levels without being predicted to be diabetic, which is a
-pattern that can be discerned also in the actual data.
+\] results in a much more complex model. The decision boundary is now
+not linear but curvilinear, changing the appearance of the Glucose vs
+Age scatterplot (see Figure~\ref{fig-extended-scatter}). The most
+obvious difference from the previous model is that older subjects are
+``allowed'' to have higher plasma glucose levels without being predicted
+to be diabetic, which is a pattern that can be discerned also in the
+actual data. The training misclassification error (with r = 0.5) for
+this model is 0.24 (corresponding to an accuracy of 0.76) which is
+slightly better than the linear model. The AIC for the model is 744.66,
+below that of the original model.
 
 The \emph{theta3} to \emph{theta7} coefficients (for the \emph{z1} to
 \emph{z5} terms) are very small (magnitude \$10\^{}\{-7\} or less), and
 individually non-significant (p values above 0.6), but they are
 multiplied with numerically high values for \emph{Glucose} (raised to up
 to 4) in the polynomial, and the AIC reduction suggests an improved
-overall fit for the model.
+overall fit for this extended model.
 
 \begin{figure}[H]
 
@@ -958,7 +954,7 @@ conclusions from all assignments were discussed collectively.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{library}\NormalTok{(kknn)}
+\CommentTok{\# library(kknn)}
 
 \CommentTok{\# 1. + 2.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 \CommentTok{\# Read and separate data}
@@ -978,6 +974,13 @@ conclusions from all assignments were discussed collectively.
 \NormalTok{a1\_test }\OtherTok{=}\NormalTok{ a1\_data[a1\_id3, ]}
 \CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
+\NormalTok{a1\_train\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+                      \AttributeTok{train =}\NormalTok{ a1\_train,}
+                      \AttributeTok{test =}\NormalTok{ a1\_train,}
+                      \AttributeTok{k =} \DecValTok{30}\NormalTok{,}
+                      \AttributeTok{kernel =} \StringTok{"rectangular"}
+\NormalTok{)}
+
 \NormalTok{a1\_test\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(}
 \NormalTok{  V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
   \AttributeTok{train =}\NormalTok{ a1\_train,}
@@ -986,29 +989,14 @@ conclusions from all assignments were discussed collectively.
   \AttributeTok{kernel =} \StringTok{"rectangular"}
 \NormalTok{)}
 
-\NormalTok{a1\_train\_kknn }\OtherTok{\textless{}{-}} \FunctionTok{kknn}\NormalTok{(V65 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
-                   \AttributeTok{train =}\NormalTok{ a1\_train,}
-                   \AttributeTok{test =}\NormalTok{ a1\_train,}
-                   \AttributeTok{k =} \DecValTok{30}\NormalTok{,}
-                   \AttributeTok{kernel =} \StringTok{"rectangular"}
-\NormalTok{                   )}
-
-\NormalTok{a1\_cm\_test }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_test\_kknn))}
-\NormalTok{a1\_n\_errors\_test }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_test))}
-\NormalTok{a1\_misclass\_rate\_test }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_test}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_test)}
 
 \NormalTok{a1\_cm\_train }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_train}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_train\_kknn))}
 \NormalTok{a1\_n\_errors\_train }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_train) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_train))}
 \NormalTok{a1\_misclass\_rate\_train }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_train}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_train)}
 
-\CommentTok{\#Comment: The 30{-}NN classifier has misclassification rates of 4.5\% (training)}
-\CommentTok{\#and 5.3\% (test), so about 95\% of the digits are classified correctly. That}
-\CommentTok{\#is good quality overall, and the small gap between the two errors suggests}
-\CommentTok{\#little overfitting.}
-
-\CommentTok{\#Digits 0, 2, 6, 7 are classified almost perfectly. The hardest digits are}
-\CommentTok{\#4, 5, 8. Common confusions are 4 {-}\textgreater{} 7/9, 8 {-}\textgreater{} 1 and 5 {-}\textgreater{} 9, pairs that can}
-\CommentTok{\#look alike in the low{-}resolution 8x8 images.}
+\NormalTok{a1\_cm\_test }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{true =}\NormalTok{ a1\_test}\SpecialCharTok{$}\NormalTok{V65, }\AttributeTok{predicted =} \FunctionTok{fitted}\NormalTok{(a1\_test\_kknn))}
+\NormalTok{a1\_n\_errors\_test }\OtherTok{\textless{}{-}} \FunctionTok{nrow}\NormalTok{(a1\_test) }\SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(a1\_cm\_test))}
+\NormalTok{a1\_misclass\_rate\_test }\OtherTok{\textless{}{-}}\NormalTok{ a1\_n\_errors\_test}\SpecialCharTok{/}\FunctionTok{nrow}\NormalTok{(a1\_test)}
 
 \CommentTok{\# 3.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
@@ -1031,10 +1019,6 @@ conclusions from all assignments were discussed collectively.
   \FunctionTok{heatmap}\NormalTok{(m, }\AttributeTok{Colv =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{Rowv =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{labRow =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{labCol =} \ConstantTok{NA}\NormalTok{,}
           \AttributeTok{margins =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
 \NormalTok{\}}
-
-\CommentTok{\# The easy ones are easy to tell they are 8\textquotesingle{}s and the hard ones are difficult.}
-\CommentTok{\# 2 of the hard ones seem more likely to me to be ones and one of them could}
-\CommentTok{\# just as well be a six}
 
 \CommentTok{\# 4.{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
@@ -1148,8 +1132,8 @@ conclusions from all assignments were discussed collectively.
 \CommentTok{\# scripts when everything is sourced into the combined report.}
 
 \CommentTok{\# Load packages {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
-\FunctionTok{require}\NormalTok{(tidyverse)}
-\FunctionTok{require}\NormalTok{(caret)}
+\CommentTok{\# require(tidyverse)}
+
 
 \CommentTok{\# read data {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 
@@ -1173,7 +1157,7 @@ conclusions from all assignments were discussed collectively.
 \NormalTok{a2\_test\_raw  }\OtherTok{\textless{}{-}}\NormalTok{ a2\_data[}\SpecialCharTok{{-}}\NormalTok{id, ]}
 
 \CommentTok{\# scale with the TRAINING means and sds, also for the test data, so that no}
-\CommentTok{\# information from the test set leaks into the model.}
+\CommentTok{\# information from the test set leaks into the training of the model.}
 \CommentTok{\#}
 \CommentTok{\# motor\_UPDRS is scaled too (centred at 0), which is why no intercept is needed.}
 \NormalTok{a2\_means }\OtherTok{\textless{}{-}} \FunctionTok{colMeans}\NormalTok{(a2\_train\_raw)}
@@ -1232,20 +1216,20 @@ conclusions from all assignments were discussed collectively.
 \CommentTok{\# 3c. optimal theta and sigma for a given lambda, using optim(method = "BFGS")}
 \CommentTok{\#}
 \CommentTok{\# optim() minimises a function of ONE parameter vector (in this case \textquotesingle{}par\textquotesingle{}),}
-\CommentTok{\# so theta (16 values) and sigma are packed together:}
-\CommentTok{\# AKA par = c(theta, log(sigma)). One vector.}
+\CommentTok{\# so theta (16 values) and sigma are packed together,}
+\CommentTok{\# i.e.,  par = c(theta, log(sigma)). One vector.}
 \NormalTok{a2\_ridge\_opt }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(lambda) \{}
-  \CommentTok{\# numeber of paramaters}
+  \CommentTok{\# number of parameters}
 \NormalTok{  p }\OtherTok{\textless{}{-}} \FunctionTok{ncol}\NormalTok{(a2\_X\_train)}
 
   \CommentTok{\# objective {-}{-} function to use in optim (a function to be minimized)}
-  \CommentTok{\# Unpacks par and evaluate the ridge function from 3b}
+  \CommentTok{\# Unpacks par and evaluates the ridge function from 3b}
 \NormalTok{  objective }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(par) \{}
 \NormalTok{    theta }\OtherTok{\textless{}{-}}\NormalTok{ par[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{p]}
 \NormalTok{    sigma }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(par[p }\SpecialCharTok{+} \DecValTok{1}\NormalTok{])}
     \CommentTok{\# returns minus log{-}likelihood of the training data + ridge penalty}
     \CommentTok{\# (the value optim minimises)}
-    \FunctionTok{a2\_ridge}\NormalTok{(theta, sigma, lambda)}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{a2\_ridge}\NormalTok{(theta, sigma, lambda))}
 \NormalTok{  \}}
 
   \CommentTok{\# starting values: theta = 0, sigma = 1 (log(1) = 0)}
@@ -1352,7 +1336,7 @@ conclusions from all assignments were discussed collectively.
 \CommentTok{\# function definitions}
 
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
-\CommentTok{\#\textquotesingle{} A3\_classifications\_and\_plots}
+\CommentTok{\#\textquotesingle{} a3\_classifications\_and\_plots}
 \CommentTok{\#\textquotesingle{} Adds predictions based on provided predicted probabilities}
 \CommentTok{\#\textquotesingle{} and decision threshold, and creates a plot colored by diabetes prediction}
 \CommentTok{\#\textquotesingle{} and a plot colored by the predicion being correct or not,}
@@ -1369,16 +1353,16 @@ conclusions from all assignments were discussed collectively.
 \CommentTok{\#\textquotesingle{}    columns (both logical) are added}
 \CommentTok{\#\textquotesingle{} confusion\_matrix}
 \CommentTok{\#\textquotesingle{}    = confusion matrix for Actual vs Predicted diabetes}
-\CommentTok{\#\textquotesingle{} correct\_proportion}
-\CommentTok{\#\textquotesingle{}    = Proportion of correctly classified observations}
+\CommentTok{\#\textquotesingle{} training\_accuracy}
+\CommentTok{\#\textquotesingle{}    = Proportion of correctly classified observations (in the training data)}
 \CommentTok{\#\textquotesingle{} training\_misclass\_error}
-\CommentTok{\#\textquotesingle{}    = Proportion of misclassified observations}
+\CommentTok{\#\textquotesingle{}    = Proportion of misclassified observations (in the training data)}
 \CommentTok{\#\textquotesingle{} pred\_plot}
 \CommentTok{\#\textquotesingle{}    = Plot of Glucose vs Age, colored by Diabetes\_predicion}
 \CommentTok{\#\textquotesingle{} class\_plot}
 \CommentTok{\#\textquotesingle{}    = Plot of Glucose vs Age, colored by Correct\_pred}
 \CommentTok{\#\textquotesingle{}}
-\NormalTok{A3\_classifications\_and\_plots }\OtherTok{\textless{}{-}}
+\NormalTok{a3\_classifications\_and\_plots }\OtherTok{\textless{}{-}}
   \ControlFlowTok{function}\NormalTok{(data\_pred\_prob, r, glucose\_range, age\_range)\{}
 
   \CommentTok{\# adding prediction classifications to the data tibble}
@@ -1393,13 +1377,13 @@ conclusions from all assignments were discussed collectively.
           \AttributeTok{Predicted =}\NormalTok{ data\_with\_predictions}\SpecialCharTok{$}\NormalTok{Diabetes\_prediction)}
 
   \CommentTok{\# proportion correctly classified observations}
-\NormalTok{  correct\_proportion }\OtherTok{\textless{}{-}}
+\NormalTok{  training\_accuracy }\OtherTok{\textless{}{-}}
     \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(logistic\_confusion))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(logistic\_confusion)}
 
   \CommentTok{\# training misclassification error}
   \CommentTok{\# = proportion of misclassified observations}
 \NormalTok{  training\_misclass\_error }\OtherTok{\textless{}{-}}
-    \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ correct\_proportion}
+    \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ training\_accuracy}
 
   \CommentTok{\# scatterplot colored by predictions}
 \NormalTok{  pred\_plot }\OtherTok{\textless{}{-}}
@@ -1451,14 +1435,14 @@ conclusions from all assignments were discussed collectively.
 
   \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{data\_with\_predictions =}\NormalTok{ data\_with\_predictions,}
               \AttributeTok{confusion\_matrix =}\NormalTok{ logistic\_confusion,}
-              \AttributeTok{correct\_proportion =}\NormalTok{ correct\_proportion,}
+              \AttributeTok{training\_accuracy =}\NormalTok{ training\_accuracy,}
               \AttributeTok{training\_misclass\_error =}\NormalTok{ training\_misclass\_error,}
               \AttributeTok{pred\_plot =}\NormalTok{ pred\_plot,}
               \AttributeTok{class\_plot =}\NormalTok{ class\_plot))}
 \NormalTok{\}}
 
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
-\CommentTok{\#\textquotesingle{} A3\_calculate\_linear\_boundary}
+\CommentTok{\#\textquotesingle{} a3\_calculate\_linear\_boundary}
 \CommentTok{\#\textquotesingle{} Calculating a linear boundary intercept and slope}
 \CommentTok{\#\textquotesingle{}}
 \CommentTok{\#\textquotesingle{} @param theta0 Fitted intercept}
@@ -1467,7 +1451,7 @@ conclusions from all assignments were discussed collectively.
 \CommentTok{\#\textquotesingle{}}
 \CommentTok{\#\textquotesingle{} @returns A list with boundary intercept and slope}
 \CommentTok{\#\textquotesingle{}}
-\NormalTok{A3\_calculate\_linear\_boundary }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(theta0, theta1, theta2, r)\{}
+\NormalTok{a3\_calculate\_linear\_boundary }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(theta0, theta1, theta2, r)\{}
 
   \CommentTok{\# decision boundary line intercept and slope}
 \NormalTok{  boundary\_intercept }\OtherTok{\textless{}{-}}\NormalTok{  (}\FunctionTok{log}\NormalTok{(r}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{r))}\SpecialCharTok{{-}}\NormalTok{theta0)}\SpecialCharTok{/}\NormalTok{theta1}
@@ -1478,20 +1462,20 @@ conclusions from all assignments were discussed collectively.
 \NormalTok{\}}
 
 \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
-\CommentTok{\#\textquotesingle{} A3\_add\_linear\_boundary}
+\CommentTok{\#\textquotesingle{} a3\_add\_linear\_boundary}
 \CommentTok{\#\textquotesingle{} Adds a decision boundary line to the provided plots}
 \CommentTok{\#\textquotesingle{}}
 \CommentTok{\#\textquotesingle{} @param results\_list List returned by}
-\CommentTok{\#\textquotesingle{} A3\_classifications\_and\_plots}
+\CommentTok{\#\textquotesingle{} a3\_classifications\_and\_plots}
 \CommentTok{\#\textquotesingle{}}
 \CommentTok{\#\textquotesingle{} @returns A list of two plots,}
 \CommentTok{\#\textquotesingle{} one colored by diabetes prediction, and}
 \CommentTok{\#\textquotesingle{} one colored by the predicion being correct or not}
 \CommentTok{\#\textquotesingle{}}
-\NormalTok{A3\_add\_linear\_boundary }\OtherTok{\textless{}{-}}  \ControlFlowTok{function}\NormalTok{(results\_list, r )\{}
+\NormalTok{a3\_add\_linear\_boundary }\OtherTok{\textless{}{-}}  \ControlFlowTok{function}\NormalTok{(results\_list, r )\{}
   \CommentTok{\# calculate intercept and slope for the straight line}
 \NormalTok{  boundary }\OtherTok{\textless{}{-}}
-    \FunctionTok{A3\_calculate\_linear\_boundary}\NormalTok{(A3\_theta0, A3\_theta1, A3\_theta2, r)}
+    \FunctionTok{a3\_calculate\_linear\_boundary}\NormalTok{(a3\_theta0, a3\_theta1, a3\_theta2, r)}
 
   \CommentTok{\# add line to prediction plot}
 \NormalTok{  pred\_plot\_with\_line }\OtherTok{\textless{}{-}}
@@ -1542,16 +1526,16 @@ script}\label{assignment-3-main-script}
 \FunctionTok{source}\NormalTok{(}\StringTok{"R/lab1\_assignment3\_functions.R"}\NormalTok{)}
 
 \CommentTok{\# read data}
-\NormalTok{A3\_pimadata }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/pima{-}indians{-}diabetes.csv"}\NormalTok{)}
+\NormalTok{a3\_pimadata }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"data/pima{-}indians{-}diabetes.csv"}\NormalTok{)}
 
 \CommentTok{\# any NA:s?}
-\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{anyNA}\NormalTok{(A3\_pimadata)) \{}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{anyNA}\NormalTok{(a3\_pimadata)) \{}
   \FunctionTok{message}\NormalTok{(}\StringTok{"NA:s in table"}\NormalTok{)}
 \NormalTok{\}}
 
 \CommentTok{\# create tibble with meaningful column names}
-\NormalTok{A3\_pimatibble\_raw }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimadata }\SpecialCharTok{|\textgreater{}}
+\NormalTok{a3\_pimatibble\_raw }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimadata }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{tibble}\NormalTok{() }\SpecialCharTok{|\textgreater{}}
 \NormalTok{  magrittr}\SpecialCharTok{::}\FunctionTok{set\_colnames}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"Parity"}\NormalTok{, }\StringTok{"Glucose"}\NormalTok{, }\StringTok{"DBP"}\NormalTok{, }\StringTok{"Skinfold"}\NormalTok{,}
                            \StringTok{"Insulin"}\NormalTok{,}\StringTok{"BMI"}\NormalTok{, }\StringTok{"Pedigree"}\NormalTok{, }\StringTok{"Age"}\NormalTok{, }\StringTok{"Diabetes"}\NormalTok{)) }\SpecialCharTok{|\textgreater{}}
@@ -1561,7 +1545,7 @@ script}\label{assignment-3-main-script}
 \NormalTok{         DBP, Insulin, Glucose, Diabetes)}
 
 \CommentTok{\# data check}
-\NormalTok{  A3\_pimatibble\_raw }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  a3\_pimatibble\_raw }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{pivot\_longer}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(ID,Diabetes),}
                \AttributeTok{names\_to =} \StringTok{"Measure"}\NormalTok{,}
                \AttributeTok{values\_to =} \StringTok{"Value"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
@@ -1575,28 +1559,28 @@ script}\label{assignment-3-main-script}
   \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"top"}\NormalTok{)}
 
 \CommentTok{\# checking exact range for Age, Glucose, and Diabetes}
-\NormalTok{A3\_pimatibble\_raw }\SpecialCharTok{|\textgreater{}}
+\NormalTok{a3\_pimatibble\_raw }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{select}\NormalTok{(}\FunctionTok{c}\NormalTok{(Age, Glucose, Diabetes)) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{map}\NormalTok{(\textbackslash{}(x) }\FunctionTok{range}\NormalTok{(x))}
 
 \CommentTok{\# removing cases with Glucose = 0}
-\NormalTok{A3\_pimatibble }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimatibble\_raw }\SpecialCharTok{|\textgreater{}}
+\NormalTok{a3\_pimatibble }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimatibble\_raw }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{filter}\NormalTok{(Glucose }\SpecialCharTok{!=} \DecValTok{0}\NormalTok{)}
 
 \CommentTok{\# saving adjusted ranges}
-\NormalTok{A3\_minmaxlist }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimatibble }\SpecialCharTok{|\textgreater{}}
+\NormalTok{a3\_minmaxlist }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimatibble }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{select}\NormalTok{(Age, Glucose) }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{map}\NormalTok{(\textbackslash{}(x) }\FunctionTok{tibble}\NormalTok{(}\AttributeTok{min =} \FunctionTok{min}\NormalTok{(x), }\AttributeTok{max =} \FunctionTok{max}\NormalTok{(x)))}
 
-\NormalTok{A3\_Age\_range }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(A3\_minmaxlist[[}\StringTok{"Age"}\NormalTok{]])}
-\NormalTok{A3\_Glucose\_range }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(A3\_minmaxlist[[}\StringTok{"Glucose"}\NormalTok{]], }\AttributeTok{use.names =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{a3\_Age\_range }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(a3\_minmaxlist[[}\StringTok{"Age"}\NormalTok{]])}
+\NormalTok{a3\_Glucose\_range }\OtherTok{\textless{}{-}} \FunctionTok{unlist}\NormalTok{(a3\_minmaxlist[[}\StringTok{"Glucose"}\NormalTok{]], }\AttributeTok{use.names =} \ConstantTok{FALSE}\NormalTok{)}
 
 \CommentTok{\# scatterplot Glucose vs Age}
 
-\NormalTok{A3\_Glucose\_vs\_Age\_scatter }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimatibble }\SpecialCharTok{|\textgreater{}}
+\NormalTok{a3\_Glucose\_vs\_Age\_scatter }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimatibble }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+}
   \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Age, }\AttributeTok{y =}\NormalTok{ Glucose, }\AttributeTok{color =}\NormalTok{ Diabetes) }\SpecialCharTok{+}
   \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
@@ -1605,10 +1589,10 @@ script}\label{assignment-3-main-script}
   \FunctionTok{scale\_colour\_manual}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Non{-}diabetic"}\NormalTok{, }\StringTok{"Diabetic"}\NormalTok{),}
                       \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"royalblue"}\NormalTok{, }\StringTok{"maroon2"}\NormalTok{)) }\SpecialCharTok{+}
   \FunctionTok{scale\_x\_continuous}\NormalTok{(}
-    \AttributeTok{limits =}\NormalTok{ A3\_Age\_range }\SpecialCharTok{+} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\SpecialCharTok{+}\DecValTok{5}\NormalTok{),}
+    \AttributeTok{limits =}\NormalTok{ a3\_Age\_range }\SpecialCharTok{+} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\SpecialCharTok{+}\DecValTok{5}\NormalTok{),}
     \AttributeTok{breaks =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{breaks\_width}\NormalTok{(}\AttributeTok{width=}\DecValTok{10}\NormalTok{)) }\SpecialCharTok{+} \CommentTok{\# equally spaced breaks}
   \FunctionTok{scale\_y\_continuous}\NormalTok{(}
-    \AttributeTok{limits =}\NormalTok{ A3\_Glucose\_range }\SpecialCharTok{+} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\SpecialCharTok{+}\DecValTok{5}\NormalTok{),}
+    \AttributeTok{limits =}\NormalTok{ a3\_Glucose\_range }\SpecialCharTok{+} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\SpecialCharTok{+}\DecValTok{5}\NormalTok{),}
     \AttributeTok{breaks =}\NormalTok{ scales}\SpecialCharTok{::}\FunctionTok{breaks\_width}\NormalTok{(}\DecValTok{10}\NormalTok{),}
     \AttributeTok{expand =} \FunctionTok{expansion}\NormalTok{(}\AttributeTok{mult =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.05}\NormalTok{))}
 \NormalTok{  ) }\SpecialCharTok{+}
@@ -1619,90 +1603,90 @@ script}\label{assignment-3-main-script}
 \CommentTok{\# Diabetes \textasciitilde{} Glucose + Age in a logistic regression model}
 \CommentTok{\# using glm()= with family = "binomial" since target has two levels}
 
-\NormalTok{A3\_logistic\_model }\OtherTok{\textless{}{-}}
-  \FunctionTok{glm}\NormalTok{(Diabetes }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Glucose }\SpecialCharTok{+}\NormalTok{ Age, }\AttributeTok{data =}\NormalTok{ A3\_pimatibble, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+\NormalTok{a3\_logistic\_model }\OtherTok{\textless{}{-}}
+  \FunctionTok{glm}\NormalTok{(Diabetes }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Glucose }\SpecialCharTok{+}\NormalTok{ Age, }\AttributeTok{data =}\NormalTok{ a3\_pimatibble, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
 
-\FunctionTok{summary}\NormalTok{(A3\_logistic\_model)}
+\FunctionTok{summary}\NormalTok{(a3\_logistic\_model)}
 
 \CommentTok{\# coefficients (= coefficients in the probabilistic equation)}
 
-\NormalTok{A3\_logistic\_coef }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(A3\_logistic\_model)}
+\NormalTok{a3\_logistic\_coef }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(a3\_logistic\_model)}
 
-\NormalTok{A3\_theta0 }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_coef[}\StringTok{"(Intercept)"}\NormalTok{]}
-\NormalTok{A3\_theta1 }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_coef[}\StringTok{"Glucose"}\NormalTok{]}
-\NormalTok{A3\_theta2 }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_coef[}\StringTok{"Age"}\NormalTok{]}
+\NormalTok{a3\_theta0 }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_coef[}\StringTok{"(Intercept)"}\NormalTok{]}
+\NormalTok{a3\_theta1 }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_coef[}\StringTok{"Glucose"}\NormalTok{]}
+\NormalTok{a3\_theta2 }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_coef[}\StringTok{"Age"}\NormalTok{]}
 
 \CommentTok{\# adding predicted probabilities to data}
-\NormalTok{A3\_pimatibble\_pred\_probs }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimatibble }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Predicted\_prob =} \FunctionTok{predict}\NormalTok{(A3\_logistic\_model, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{))}
+\NormalTok{a3\_pimatibble\_pred\_probs }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimatibble }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Predicted\_prob =} \FunctionTok{predict}\NormalTok{(a3\_logistic\_model, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{))}
 
 \CommentTok{\# adding predicted diabetess classification}
 \CommentTok{\# and comparison with actual diabetes class}
 \CommentTok{\# and plot visualizing the results}
-\NormalTok{A3\_results\_r\_05 }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_classifications\_and\_plots}\NormalTok{(A3\_pimatibble\_pred\_probs,}
-                               \AttributeTok{r =} \FloatTok{0.5}\NormalTok{, A3\_Glucose\_range, A3\_Age\_range)}
+\NormalTok{a3\_results\_r\_05 }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_classifications\_and\_plots}\NormalTok{(a3\_pimatibble\_pred\_probs,}
+                               \AttributeTok{r =} \FloatTok{0.5}\NormalTok{, a3\_Glucose\_range, a3\_Age\_range)}
 
-\NormalTok{A3\_results\_r\_02 }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_classifications\_and\_plots}\NormalTok{(A3\_pimatibble\_pred\_probs,}
-                               \AttributeTok{r =} \FloatTok{0.2}\NormalTok{, A3\_Glucose\_range, A3\_Age\_range)}
+\NormalTok{a3\_results\_r\_02 }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_classifications\_and\_plots}\NormalTok{(a3\_pimatibble\_pred\_probs,}
+                               \AttributeTok{r =} \FloatTok{0.2}\NormalTok{, a3\_Glucose\_range, a3\_Age\_range)}
 
-\NormalTok{A3\_results\_r\_08 }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_classifications\_and\_plots}\NormalTok{(A3\_pimatibble\_pred\_probs,}
-                            \AttributeTok{r =} \FloatTok{0.8}\NormalTok{, A3\_Glucose\_range, A3\_Age\_range)}
+\NormalTok{a3\_results\_r\_08 }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_classifications\_and\_plots}\NormalTok{(a3\_pimatibble\_pred\_probs,}
+                            \AttributeTok{r =} \FloatTok{0.8}\NormalTok{, a3\_Glucose\_range, a3\_Age\_range)}
 
 \CommentTok{\# adding decision boundary lines to Glucose vs Age plots}
-\NormalTok{A3\_boundary\_05\_plots }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_add\_linear\_boundary}\NormalTok{(A3\_results\_r\_05, }\AttributeTok{r =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{a3\_boundary\_05\_plots }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_add\_linear\_boundary}\NormalTok{(a3\_results\_r\_05, }\AttributeTok{r =} \FloatTok{0.5}\NormalTok{)}
 
-\NormalTok{A3\_boundary\_02\_plots }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_add\_linear\_boundary}\NormalTok{(A3\_results\_r\_02, }\AttributeTok{r =} \FloatTok{0.2}\NormalTok{)}
+\NormalTok{a3\_boundary\_02\_plots }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_add\_linear\_boundary}\NormalTok{(a3\_results\_r\_02, }\AttributeTok{r =} \FloatTok{0.2}\NormalTok{)}
 
-\NormalTok{A3\_boundary\_08\_plots }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_add\_linear\_boundary}\NormalTok{(A3\_results\_r\_08, }\AttributeTok{r =} \FloatTok{0.8}\NormalTok{)}
+\NormalTok{a3\_boundary\_08\_plots }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_add\_linear\_boundary}\NormalTok{(a3\_results\_r\_08, }\AttributeTok{r =} \FloatTok{0.8}\NormalTok{)}
 
 \CommentTok{\# basis function expansion}
 \CommentTok{\# sdding new features}
-\NormalTok{A3\_pimatibble\_extended }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimatibble }\SpecialCharTok{|\textgreater{}}
+\NormalTok{a3\_pimatibble\_extended }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimatibble }\SpecialCharTok{|\textgreater{}}
   \FunctionTok{mutate}\NormalTok{(}\AttributeTok{z1 =}\NormalTok{ Glucose}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{,}
          \AttributeTok{z2 =}\NormalTok{ Glucose}\SpecialCharTok{\^{}}\DecValTok{3}\SpecialCharTok{*}\NormalTok{Age,}
          \AttributeTok{z3 =}\NormalTok{ Glucose}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{*}\NormalTok{Age}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{,}
          \AttributeTok{z4 =}\NormalTok{ Glucose}\SpecialCharTok{*}\NormalTok{Age}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{,}
          \AttributeTok{z5 =}\NormalTok{ Age}\SpecialCharTok{\^{}}\DecValTok{4}\NormalTok{)}
 
-\NormalTok{A3\_logistic\_model\_extended }\OtherTok{\textless{}{-}}
+\NormalTok{a3\_logistic\_model\_extended }\OtherTok{\textless{}{-}}
   \FunctionTok{glm}\NormalTok{(Diabetes }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Glucose }\SpecialCharTok{+}\NormalTok{ Age }\SpecialCharTok{+}\NormalTok{ z1 }\SpecialCharTok{+}\NormalTok{ z2 }\SpecialCharTok{+}\NormalTok{ z3 }\SpecialCharTok{+}\NormalTok{ z4 }\SpecialCharTok{+}\NormalTok{ z5,}
-      \AttributeTok{data =}\NormalTok{ A3\_pimatibble\_extended, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+      \AttributeTok{data =}\NormalTok{ a3\_pimatibble\_extended, }\AttributeTok{family =} \StringTok{"binomial"}\NormalTok{)}
 
-\FunctionTok{summary}\NormalTok{(A3\_logistic\_model\_extended)}
+\FunctionTok{summary}\NormalTok{(a3\_logistic\_model\_extended)}
 
 \CommentTok{\# coefficients (= coefficients in the probabilistic equation)}
 
-\NormalTok{A3\_logistic\_extended\_coef }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(A3\_logistic\_model\_extended)}
+\NormalTok{a3\_logistic\_extended\_coef }\OtherTok{\textless{}{-}} \FunctionTok{coef}\NormalTok{(a3\_logistic\_model\_extended)}
 
-\NormalTok{A3\_theta0\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"(Intercept)"}\NormalTok{]}
-\NormalTok{A3\_theta1\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"Glucose"}\NormalTok{]}
-\NormalTok{A3\_theta2\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"Age"}\NormalTok{]}
-\NormalTok{A3\_theta3\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"z1"}\NormalTok{]}
-\NormalTok{A3\_theta4\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"z2"}\NormalTok{]}
-\NormalTok{A3\_theta5\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"z3"}\NormalTok{]}
-\NormalTok{A3\_theta6\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"z4"}\NormalTok{]}
-\NormalTok{A3\_theta7\_ext }\OtherTok{\textless{}{-}}\NormalTok{ A3\_logistic\_extended\_coef[}\StringTok{"z5"}\NormalTok{]}
+\NormalTok{a3\_theta0\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"(Intercept)"}\NormalTok{]}
+\NormalTok{a3\_theta1\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"Glucose"}\NormalTok{]}
+\NormalTok{a3\_theta2\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"Age"}\NormalTok{]}
+\NormalTok{a3\_theta3\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"z1"}\NormalTok{]}
+\NormalTok{a3\_theta4\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"z2"}\NormalTok{]}
+\NormalTok{a3\_theta5\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"z3"}\NormalTok{]}
+\NormalTok{a3\_theta6\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"z4"}\NormalTok{]}
+\NormalTok{a3\_theta7\_ext }\OtherTok{\textless{}{-}}\NormalTok{ a3\_logistic\_extended\_coef[}\StringTok{"z5"}\NormalTok{]}
 
 
 \CommentTok{\# adding predicted probabilities to data}
-\NormalTok{A3\_pimatibble\_extended\_pred\_probs }\OtherTok{\textless{}{-}}
-\NormalTok{  A3\_pimatibble\_extended }\SpecialCharTok{|\textgreater{}}
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Predicted\_prob =} \FunctionTok{predict}\NormalTok{(A3\_logistic\_model\_extended, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{))}
+\NormalTok{a3\_pimatibble\_extended\_pred\_probs }\OtherTok{\textless{}{-}}
+\NormalTok{  a3\_pimatibble\_extended }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Predicted\_prob =} \FunctionTok{predict}\NormalTok{(a3\_logistic\_model\_extended, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{))}
 
 
 
-\NormalTok{A3\_results\_extended }\OtherTok{\textless{}{-}}
-  \FunctionTok{A3\_classifications\_and\_plots}\NormalTok{(A3\_pimatibble\_extended\_pred\_probs,}
+\NormalTok{a3\_results\_extended }\OtherTok{\textless{}{-}}
+  \FunctionTok{a3\_classifications\_and\_plots}\NormalTok{(a3\_pimatibble\_extended\_pred\_probs,}
                                \AttributeTok{r =} \FloatTok{0.5}\NormalTok{,}
-\NormalTok{                               A3\_Glucose\_range, A3\_Age\_range)}
+\NormalTok{                               a3\_Glucose\_range, a3\_Age\_range)}
 \end{Highlighting}
 \end{Shaded}
 

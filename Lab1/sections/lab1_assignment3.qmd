@@ -1,6 +1,6 @@
 <!-- Assignment 3 -->
 
-Visualization of the data shows that there are values equal to zero in the measures, including plasma glucose which is one of the predictors of interest in this assignment. `Glucose = 0` is not a feasible value, but rather representing a missing value. All cases (n=5) with plasma glucose equal to zero were excluded from the data before the regression analysis.
+Visualization of the data with 767 cases shows that there are values equal to zero in the measures, including plasma glucose which is one of the predictors of interest in this assignment. `Glucose = 0` is not a feasible value, but rather representing a missing value. All cases (n= 5) with plasma glucose equal to zero were excluded from the data before the regression analysis.(There are "impossible" zeroes in the data for other predictors which not used in this analysis as well, but these cases are ijncluded this analysis.) 
 
 
 ## Scatterplot diabetes vs age
@@ -18,7 +18,7 @@ source("R/lab1_assignment3.R") # imports functions from seperate file in additio
 #| out-width: "60%"
 #| fig-align: center
 
-A3_Glucose_vs_Age_scatter
+a3_Glucose_vs_Age_scatter
 ```
 
 Plotting plasma glucose levels vs. age shows that the two response groups, 
@@ -43,17 +43,18 @@ For *Diabetes* as the binary target/response (y), and *Glucose* and *Age* as fea
 $$
 P(Y = 1 \mid x_1, x_2) = \frac{1}{1 + e^{-(\theta_0 + \theta_1 \cdot x_1 + \theta_2 \cdot x_2)}}
 $${#eq-logistic-expanded}
-Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the coefficients $\theta_0 = `r round(A3_theta0, 4)`$, $\theta_1 = `r round(A3_theta1, 4)`$, and $\theta_2 = `r round(A3_theta2, 4)`$, all with significant p values,  and the corresponding probabilistic equation is then
+Training a logistic regression model on the (entire) provided data set, using glm() in R, results in the coefficients $\theta_0 = `r round(a3_theta0, 4)`$, $\theta_1 = `r round(a3_theta1, 4)`$, and $\theta_2 = `r round(a3_theta2, 4)`$, all with significant p values,  and the corresponding probabilistic equation is then
 
 $$
 P(Y=1 \mid x_1,x_2) =
 \frac{1}{1 + e^{-(
-`r round(A3_theta0, 4)` +
-`r round(A3_theta1, 4)`x_1 +
-`r round(A3_theta2, 4)`x_2)}}
+`r round(a3_theta0, 4)` +
+`r round(a3_theta1, 4)`x_1 +
+`r round(a3_theta2, 4)`x_2)}}
 $${#eq-logistic-fitted}
 
-The training misclassification error for this model (with r = 0.5) is `r round(A3_results_r_05[["training_misclass_error"]], 2)`, i.e approximately one out of four observations are misclassified.
+The **training misclassification** error for this model (with r = 0.5) is `r round(a3_results_r_05[["training_misclass_error"]], 2)` (corresponding to an **accuracy** of `r 1- round(a3_results_r_05[["training_misclass_error"]], 2)`i.e approximately one out of four observations are misclassified.
+The AIC for the model is `r round(a3_logistic_model$aic,2)`.
 
 ## Scatterplot colored by predicions
 ```{r}
@@ -63,7 +64,7 @@ The training misclassification error for this model (with r = 0.5) is `r round(A
 #| fig-height: 3
 #| out-width: "60%"
 #| fig-align: center
-A3_results_r_05[["pred_plot"]]
+a3_results_r_05[["pred_plot"]]
 ```
 
 Comparing the predicted diabetes classifications to the actual diabetes status as shown in @fig-scatter-glucose-age it looks like there will be some misclassifications, possibly more so for subjects in the lower, middle part of the scatter, where diabetic an non-diabetic subjects are overlapping, and for the non-diabetic elderly subjects.
@@ -74,15 +75,15 @@ Setting the probabilistic equation in @eq-logistic-fitted equal to `r` (here `= 
  results in this approximate decision boundary equation, with the fitted coefficients and *x1 = Glucose* and *x2 = Age* :
 
 $$
-`r round(A3_theta0, 4)` +
-`r round(A3_theta1, 4)`\cdot Glucose +
-`r round(A3_theta2, 4)`\cdot Age = 0
+`r round(a3_theta0, 4)` +
+`r round(a3_theta1, 4)`\cdot Glucose +
+`r round(a3_theta2, 4)`\cdot Age = 0
 $$ {#eq-dbeq}
 
 Solving this for *Glucose* gives the approximate linear decision boundary line
 
 $$
-\mathit{Glucose} = `r round(-A3_theta0/A3_theta1,2)` `r - round(A3_theta2/A3_theta1,2)`\cdot Age
+\mathit{Glucose} = `r round(-a3_theta0/a3_theta1,2)` `r - round(a3_theta2/a3_theta1,2)`\cdot Age
 $$ {#eq-dbeq-glucose-solved}
 
 \clearpage
@@ -97,7 +98,7 @@ $$ {#eq-dbeq-glucose-solved}
 #| out-width: "60%"
 #| fig-align: center
 #| fig-pos: 'H'
-A3_boundary_05_plots[["pred_plot_with_line"]]
+a3_boundary_05_plots[["pred_plot_with_line"]]
 ```
 
 The boundary line means that there will likely be misclassifications both ways in the mixed "middle" group. The elderly non-diabetics will risk being misclassified as diabetic according to the negative slope of the linear boundary imposing increasingly harder restrictions on acceptable plasma glucose level for a non-diabetic subject.
@@ -112,7 +113,7 @@ $$ {#eq-linear-boundary-generic}
 
 which means the intercept changes with r, the slope does not.
 
-With r = 0.2 are more individuals predicted to be diabetic, with r increased to 0.8 instead fewer individuals. The training misclassification errors are `r round(A3_results_r_02[["training_misclass_error"]], 2)` and `r round(A3_results_r_08[["training_misclass_error"]], 2)` resepectively for the 0.2 and 0.8 cases, both higher than for the 0.5 cutoff case.
+With r = 0.2 are more individuals predicted to be diabetic, with r increased to 0.8 instead fewer individuals. The training misclassification errors are `r round(a3_results_r_02[["training_misclass_error"]], 2)` and `r round(a3_results_r_08[["training_misclass_error"]], 2)` resepectively for the 0.2 and 0.8 cases, both higher than for the 0.5 cutoff case.
 
 
 
@@ -124,8 +125,8 @@ With r = 0.2 are more individuals predicted to be diabetic, with r increased to 
 #| fig-pos: 'H'
 #| echo: false
 
-p1 <- A3_boundary_02_plots[["pred_plot_with_line"]]
-p2 <- A3_boundary_08_plots[["pred_plot_with_line"]]
+p1 <- a3_boundary_02_plots[["pred_plot_with_line"]]
+p2 <- a3_boundary_08_plots[["pred_plot_with_line"]]
 
 (p1 | p2) +
   plot_layout(guides = "collect") &
@@ -142,9 +143,9 @@ z_3 = x_1^2 x_2^2, \quad
 z_4 = x_1 x_2^3, \quad
 z_5 = x_2^4
 $$
-results in a much more complex model but a training misclassification error (with r = 0.5) of `r round(A3_results_extended[["training_misclass_error"]], 2)` which is slightly better than the linear model. The decision boundary is now not linear but curvilinear, changing the appearance of the Glucose vs Age scatterplot (see @fig-extended-scatter). The most obvious difference from the previous model is that older subjects are "allowed" to have  higher plasma glucose levels without being predicted to be diabetic, which is a pattern that can be discerned also in the actual data.  
+results in a much more complex model. The decision boundary is now not linear but curvilinear, changing the appearance of the Glucose vs Age scatterplot (see @fig-extended-scatter). The most obvious difference from the previous model is that older subjects are "allowed" to have  higher plasma glucose levels without being predicted to be diabetic, which is a pattern that can be discerned also in the actual data.  The training misclassification error (with r = 0.5) for this model is `r round(a3_results_extended[["training_misclass_error"]], 2)` (corresponding to an accuracy of `r 1 - round(a3_results_extended[["training_misclass_error"]], 2)`)  which is slightly better than the linear model. The AIC for the model is `r round(a3_logistic_model_extended$aic, 2)`, below that of the original model.
 
-The *theta3* to *theta7* coefficients (for the *z1* to *z5* terms) are very small (magnitude $10^{-7} or less), and individually non-significant (p values above 0.6), but they are multiplied with numerically high values for *Glucose* (raised to up to 4) in the polynomial, and the AIC reduction suggests an improved overall fit for the model.
+The *theta3* to *theta7* coefficients (for the *z1* to *z5* terms) are very small (magnitude $10^{-7} or less), and individually non-significant (p values above 0.6), but they are multiplied with numerically high values for *Glucose* (raised to up to 4) in the polynomial, and the AIC reduction suggests an improved overall fit for this extended model.
 
 ```{r}
 #| label: fig-extended-scatter
@@ -156,6 +157,6 @@ The *theta3* to *theta7* coefficients (for the *z1* to *z5* terms) are very smal
 #| fig-pos: 'H'
 #| echo: false
 
-A3_results_extended[["pred_plot"]]
+a3_results_extended[["pred_plot"]]
 ```
 
