@@ -26,25 +26,34 @@ a3_design_matrix <- a3_communities_scaled_df[a3_feature_cols_index]
 a3_S <- cov(a3_design_matrix)
 a3_e <- eigen(a3_S)
 
-a3_cum <- cumsum(a3_e$values) / sum(a3_e$values)
+a3_cumsum <- cumsum(a3_e$values) / sum(a3_e$values)
+
+a3_nr_comp_95 <- which(a3_cumsum > 0.95)[1]
+
 
 # elbow (scree) plot: proportion of variance explained by each component
-a3_scree_df <- tibble(
+a3_prop_df <- tibble(
   component = seq_along(a3_e$values),
-  prop_var  = a3_e$values / sum(a3_e$values)
+  prop_var  = a3_e$values / sum(a3_e$values),
+  cum_prop_var = cumsum(a3_e$values / sum(a3_e$values))
 )
 
-a3_scree_plot <- ggplot(a3_scree_df, aes(x = component, y = prop_var)) +
+a3_prop_2_comp <- a3_prop_df$cum_prop_var[2]
+
+a3_scree_plot <- ggplot(a3_prop_df, aes(x = component, y = prop_var)) +
   geom_line() +
   geom_point(size = 1) +
   scale_y_continuous(labels = scales::percent) +
   labs(x = "Principal component",
        y = "Proportion of variance explained") +
-  theme_minimal()
-
+  theme_bw()
 
 
 # 2. PCA with princomp() -------------------------------------------------------
+
+a3_thingy <- princomp(a3_design_matrix)
+
+
 
 
 # 3. Linear regression, 50/50 train/test split ---------------------------------
