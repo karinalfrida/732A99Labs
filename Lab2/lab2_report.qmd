@@ -1,0 +1,93 @@
+---
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: lab2_report_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: false
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3 # change to 2 if preferable
+    geometry:
+      - margin=2.5cm # symmetrical
+  docx: default 
+  html:
+    toc: true
+execute:
+    echo: true          # (false in final version)
+    warning: true       # (false in final version)
+    message: true       # (false in final version)
+---
+
+\makereportfrontpage
+
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+```{r packages}
+#| include: false
+# library(tidyverse)
+# library(patchwork)
+```
+
+\justifying
+
+# Assignment 1
+ <!-- {{< include sections/lab2_assignment1.qmd >}} -->
+
+
+\clearpage
+# Assignment 2
+<!--  {{< include sections/lab2_assignment2.qmd >}} -->
+
+\clearpage
+# Assignment 3
+<!-- {{< include sections/lab2_assignment3.qmd >}} -->
+
+\clearpage
+# Theory
+<!-- {{< include sections/lab2_theory.qmd >}} -->
+
+\clearpage
+
+<!-- # References -->
+
+<!-- ::: {#refs} -->
+<!-- ::: -->
+
+<!-- Appendix -->
+\appendix
+# R code
+
+## Assignment 1
+
+```{r}
+##| file: R/lab2_assignment1.R
+##| echo: true
+##| eval: false
+```
+
+
+## Assignment 2
+
+```{r}
+##| file: R/lab2_assignment2.R
+##| echo: true
+##| eval: false
+```
+
+
+## Assignment 3
+
+```{r}
+##| file: R/lab2_assignment3.R
+##| echo: true
+##| eval: false
+```
+
