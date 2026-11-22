@@ -1,0 +1,56 @@
+---
+# WIP: standalone header so this section renders to a PDF on its own, with the
+# same layout as Lab1/lab1_report.qmd. When the section is included in a
+# lab2_report.qmd, delete this YAML block and the WIP block below.
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: ../lab2_report_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: false
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3
+    geometry:
+      - margin=2.5cm
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+<!-- WIP start: front page and assignment heading for standalone rendering. -->
+\makereportfrontpage
+
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\justifying
+
+\setcounter{section}{2}
+
+# Assignment 3 - Principal components and implicit regularization
+<!-- WIP end -->
+
+```{r}
+#| include: false
+source("R/lab2_assignment3.R")
+```
+
+## PCA with eigen()
+
+
+## PCA with princomp()
+
+
+## Linear regression
+
+
+## Implicit regularization with BFGS and early stopping
+
