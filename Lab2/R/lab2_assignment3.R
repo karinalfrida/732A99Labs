@@ -182,9 +182,18 @@ a3_cost <- function(theta) {
   return(train_mse)
 }
 
+# Gradient of the cost function (MSE) with respect to theta
+a3_gradient <- function(theta) {
+  as.vector(
+    (2 / nrow(a3_X_train)) *
+      crossprod(a3_X_train, a3_X_train %*% theta - a3_y_train)
+  )
+}
+
 # optim() to find the theta that make the cost function (MSE) as small as possible
 a3_bfgs <- optim(par = rep(0, ncol(a3_X_train)),  # 100 zeros (nr of features)
                  fn = a3_cost,                    # cost function defined above
+                 gr = a3_gradient,                # gradient function defined above
                  method = "BFGS",                 # optimization algorithm
                  control = list(
                    maxit = 1000
@@ -198,26 +207,29 @@ a3_opt_iter     <- which.min(a3_test_errors)
 a3_es_train_mse <- a3_train_errors[a3_opt_iter]
 a3_es_test_mse  <- a3_test_errors[a3_opt_iter]
 
-# errors against iteration number, first 500 iterations discarded (hint 2)
+
+# errors against iteration number, initial iterations discarded
 a3_es_df <- tibble(
   iteration = seq_along(a3_train_errors),
   Training  = a3_train_errors,
   Test      = a3_test_errors
 ) |>
-  filter(iteration > 500) |>
+  filter(iteration > 10) |>
   pivot_longer(c(Training, Test),
                names_to = "data",
                values_to = "mse") |>
   mutate(data = factor(data, levels = c("Training", "Test")))
 
-# Plot of the MSE over Iterations in the optimizer
+# Plot of the MSE over Iterations in the optimizer. Log10 x-axis because the
+# test error bottoms out early and then stays flat. Points mark each call.
 a3_es_plot <- ggplot(a3_es_df, aes(x = iteration, y = mse, colour = data)) +
   geom_line() +
+  geom_point(size = 0.8) +
   geom_vline(xintercept = a3_opt_iter, linetype = "dashed", colour = "grey40") +
   scale_x_log10(breaks = scales::breaks_log(n = 8),
                 labels = scales::label_comma()) +
   annotation_logticks(sides = "b") +
-  coord_cartesian(ylim = c(0.25, 0.7)) +
+  coord_cartesian(ylim = c(0.25, 1)) +
   labs(x = "Iteration (cost function evaluation, log scale)",
        y = "MSE",
        colour = NULL) +
