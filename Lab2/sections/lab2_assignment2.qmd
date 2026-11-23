@@ -1,0 +1,26 @@
+---
+fontsize: 11pt
+lang: en
+format:
+  pdf:
+    documentclass: article
+    include-in-header: lab2_report_preamble.tex
+    pdf-engine: xelatex
+    keep-tex: false
+    toc: false
+    lot: false
+    lof: false
+    number-sections: true
+    number-depth: 3 # change to 2 if preferable
+    geometry:
+      - margin=2.5cm # symmetrical
+  docx: default 
+  html:
+    toc: true
+execute:
+    echo: true          # (false in final version)
+    warning: true       # (false in final version)
+    message: true       # (false in final version)
+---
+
+The data set was divided into training (`r nrow(a2_train)` observations, 50%), validation (`r nrow(a2_valid)`, 25%) and test (`r nrow(a2_test)`, 25%) sets using the partitioning code from Lecture 1a, slide 34, with `set.seed(12345)`.
