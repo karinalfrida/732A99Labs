@@ -1,42 +1,4 @@
----
-# WIP: standalone header so this section renders to a PDF on its own, with the
-# same layout as Lab1/lab1_report.qmd. When the section is included in a
-# lab2_report.qmd, delete this YAML block and the WIP block below.
-fontsize: 11pt
-lang: en
-format:
-  pdf:
-    documentclass: article
-    include-in-header: ../lab2_report_preamble.tex
-    pdf-engine: xelatex
-    keep-tex: false
-    toc: false
-    lot: false
-    lof: false
-    number-sections: true
-    number-depth: 3
-    geometry:
-      - margin=2.5cm
-execute:
-  echo: false
-  warning: false
-  message: false
----
-
-<!-- WIP start: front page and assignment heading for standalone rendering. -->
-\makereportfrontpage
-
-\clearpage
-
-\pagenumbering{arabic}
-\setcounter{page}{1}
-
-\justifying
-
-\setcounter{section}{2}
-
-# Assignment 3 - Principal components and implicit regularization
-<!-- WIP end -->
+<!-- Assignment 3 -->
 
 ```{r}
 #| include: false
@@ -45,12 +7,101 @@ source("R/lab2_assignment3.R")
 
 ## PCA with eigen()
 
+All `r a3_n_features` features were centred and scaled to unit variance with `caret::preProcess()`. The response `ViolentCrimesPerPop` was not scaled and was left out of the PCA. We implemented PCA by an eigendecomposition (`eigen()`) of the sample covariance matrix $S$ of the scaled features. The eigenvectors of $S$ are the directions of the principal components and the eigenvalues $\lambda_k$ are the variances along them, so component $k$ explains the proportion
+
+$$
+\frac{\lambda_k}{\sum_{j=1}^{p} \lambda_j}
+$$ {#eq-a3-prop-var}
+
+of the total variance. Since every scaled feature has variance one, the eigenvalues sum to $p = `r a3_n_features`$.
+
+To obtain at least 95% of the variance, `r a3_nr_comp_95` components are needed. The first `r a3_nr_comp_95 - 1` components explain `r a3_pct(a3_prop_df$cum_prop_var[a3_nr_comp_95 - 1], 0.01)`, just below the threshold, and the first `r a3_nr_comp_95` explain `r a3_pct(a3_prop_df$cum_prop_var[a3_nr_comp_95], 0.01)` (@fig-a3-variance). The first principal component explains `r a3_pct(a3_prop_df$prop_var[1])` of the variance and the second `r a3_pct(a3_prop_df$prop_var[2])`, together `r a3_pct(a3_prop_2_comp)`.
+
+```{r}
+#| label: fig-a3-variance
+#| echo: false
+#| fig-cap: "Proportion of the variance explained by each principal component (left) and cumulative proportion explained (right). The dashed line marks 95%."
+#| fig-width: 8
+#| fig-height: 3
+#| fig-pos: 'H'
+a3_var_plots
+```
+
+The first component has eigenvalue `r sprintf("%.1f", a3_e$values[1])`. After the first few components however, the explained variance falls off slowly, so `r a3_nr_comp_95` of the `r a3_n_features` dimensions are still needed to keep 95% of the variance.
 
 ## PCA with princomp()
 
 
+```{r}
+#| label: fig-a3-trace
+#| echo: false
+#| fig-cap: "Trace plot of the first principal component."
+#| fig-width: 7
+#| fig-height: 2.8
+#| fig-pos: 'H'
+a3_pc1_trace_plot
+```
+
+Many features contribute to PC1. Since the squared loadings sum to one, every loading would be $\pm 1/\sqrt{`r a3_n_features`} = `r a3_pc1_benchmark`$ if all features contributed equally (dashed lines in @fig-a3-trace). The figure shows that a large share of the features lie outside the lines and that no single feature dominates. PC1 is therefore a combination of many features rather than being dominated by a few.
+
+@tbl-a3-top5 lists the five features that contribute most to PC1 by absolute loading. Together they make up only `r a3_pct(a3_top5_features_PC1$cum_share[5])` of the component.
+
+```{r}
+#| label: tbl-a3-top5
+#| echo: false
+#| tbl-cap: "The five features with the largest absolute loadings on PC1, each feature's share of PC1 and its correlation with ViolentCrimesPerPop."
+knitr::kable(a3_top5_table,
+             digits = c(0, 3, 1, 2),
+             col.names = c("Feature", "Loading",
+                           "Share of PC1 (%)", "Correlation with crime"))
+```
+
+The five variables with the largest absolute loadings on PC1 are primarily related to socioeconomic conditions. Median family income, median household income, the proportion of households receiving investment income, and the proportion of children living with two parents all have negative loadings, whereas the poverty rate has a positive loading. This suggests that PC1 captures a dimension of socioeconomic disadvantage, with higher scores associated with lower incomes, greater poverty, and differences in family structure.
+
+
+```{r}
+#| label: fig-a3-scores
+#| echo: false
+#| fig-cap: "PC scores of the communities in the coordinates (PC1, PC2), coloured by ViolentCrimesPerPop. The axis labels give the proportion of the variance explained by each component."
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: "80%"
+#| fig-align: center
+#| fig-pos: 'H'
+a3_pc12_scores_plot
+```
+
+@fig-a3-scores shows the PC scores of the communities in the coordinates (PC1, PC2), coloured by `ViolentCrimesPerPop`. The sign of a component is arbitrary. Here income loads negatively and poverty positively on PC1, so a high PC1 score means a socioeconomically disadvantaged community. The crime level increases clearly from left to right. Almost all communities with low PC1 scores have low crime, while the high-crime communities lie mainly at high PC1 scores. The correlation between the PC1 score and `ViolentCrimesPerPop` is `r sprintf("%.2f", a3_cor_pc1_crime)`.
+
+Along PC2 the relationship is weaker (correlation `r sprintf("%.2f", a3_cor_pc2_crime)`). The five largest loadings on PC2 all belong to features describing recent immigration and the foreign-born population (e.g. `PctRecImmig10` and `PctForeignBorn`) and are all negative, so low PC2 scores correspond to communities with many immigrants.
+
 ## Linear regression
 
+The data were split (50/50) into a training- and test set of `r nrow(a3_train_df)` communities with the partitioning code from Lecture 1a (slide 34). Features and response were scaled with the means and standard deviations of the training data, and the same transformation was applied to the test data. A linear regression with `ViolentCrimesPerPop` as target and all other columns as features was then fitted to the training data with `lm()`.
+
+The training MSE is `r sprintf("%.3f", a3_lm_train_mse)` and the test MSE is `r sprintf("%.3f", a3_lm_test_mse)`. Since the scaled response has variance one, an MSE of one corresponds to always predicting the mean. The model explains `r a3_pct(a3_lm_train_R2)` of the variance in the training data ($R^2$) and `r a3_pct(a3_lm_test_R2)` in the test data. It thus captures a substantial part of the variation in crime level, but the test error is clearly larger than the training error. With 100 features the model is very flexible but also prone to fit some of the noise, which in turn leads to over fitting.
 
 ## Implicit regularization with BFGS and early stopping
+
+The cost function for linear regression without intercept is the training MSE
+
+$$
+J(\boldsymbol\theta) = \frac{1}{n}\sum_{i=1}^{n}\left(y_i - \boldsymbol\theta^\top \mathbf{x}_i\right)^2,
+$$ {#eq-a3-cost}
+
+where $n$ is the number of training observations. We minimized $J$ with `optim()` (method BFGS, no gradient specified) from the starting point $\boldsymbol\theta^0 = \mathbf{0}$. At every evaluation of the cost function, the training and test MSE for the current $\boldsymbol\theta$ were stored.
+
+```{r}
+#| label: fig-a3-es
+#| echo: false
+#| fig-cap: "Training and test MSE at each iteration (cost function evaluation) of the BFGS optimization, with the first 500 iterations discarded. The x-axis is on a log scale. The dashed line marks the optimal iteration by early stopping."
+#| fig-width: 7
+#| fig-height: 3.5
+#| fig-pos: 'H'
+a3_es_plot
+```
+
+@fig-a3-es shows that the training error decreases towards the least squares solution. The test error reaches its minimum at iteration `r format(a3_opt_iter, big.mark = ",")` (dashed line) and then increases again before levelling off. Iteration `r format(a3_opt_iter, big.mark = ",")` is therefore optimal according to the early stopping criterion.
+
+In the optimal model the training MSE is `r sprintf("%.3f", a3_es_train_mse)` and the test MSE is `r sprintf("%.3f", a3_es_test_mse)`, compared with `r sprintf("%.3f", a3_lm_train_mse)` and `r sprintf("%.3f", a3_lm_test_mse)` for the linear regression in step 3. When BFGS runs to convergence it reaches the same solution as `lm()`, since both minimize the training MSE. Thus, early stopping gives a higher training error but a lower test error.
 

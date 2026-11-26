@@ -1,7 +1,8 @@
 # Lab 2, Assignment 3: Principal components and implicit regularization
 
-library(tidyverse)
-library(caret)
+# library(tidyverse)
+# library(caret)
+# library(patchwork)
 
 # read data
 a3_communities_df <- read.csv("data/communities.csv")
@@ -31,8 +32,8 @@ a3_prop_df <- tibble(
   cum_prop_var = cumsum(a3_e$values / sum(a3_e$values))
 )
 
-# number of components to capture 95% of the variance
-a3_nr_comp_95 <- which(a3_prop_df$cum_prop_var > 0.95)[1]
+# number of components to capture at least 95% of the variance
+a3_nr_comp_95 <- which(a3_prop_df$cum_prop_var >= 0.95)[1]
 
 # Proportion of variance captured by 2 components
 a3_prop_2_comp <- a3_prop_df$cum_prop_var[2]
@@ -56,6 +57,17 @@ a3_cum_var_plot <- ggplot(a3_prop_df, aes(x = component, y = cum_prop_var)) +
        y = "Cumulative variance explained") +
   theme_bw()
 
+## Report prep stuff
+
+# scree plot and cumulative plot side by side, for the report
+a3_var_plots <- a3_scree_plot | a3_cum_var_plot
+
+# number of features (100)
+a3_n_features <- sum(a3_feature_cols_index)
+
+# "formats a proportion as a percentage" - function
+a3_pct <- function(x, accuracy = 0.1) scales::percent(x, accuracy = accuracy)
+
 
 # 2. PCA with princomp() -------------------------------------------------------
 
@@ -74,9 +86,15 @@ a3_pc1_loadings_df <- tibble(
   loading       = a3_loadings[, 1]              # loadings col 1
 )
 
+# Benchmark, if all features contibuted equally
+# +-1/sqrt(nr of features) (= 0.1 here).
+a3_pc1_benchmark <- 1 / sqrt(nrow(a3_loadings))
+
 # trace plot
 a3_pc1_trace_plot <- ggplot(a3_pc1_loadings_df, aes(x = feature_index, y = loading)) +
   geom_hline(yintercept = 0, colour = "grey50") +
+  geom_hline(yintercept = c(-1, 1) * a3_pc1_benchmark,
+             colour = "grey50", linetype = "dashed") +
   geom_segment(aes(xend = feature_index, y = 0, yend = loading), linewidth = 1) +
   labs(x = "Feature index",
        y = "PC1 loading") +
@@ -93,6 +111,17 @@ a3_top5_features_PC1 <- a3_pc1_loadings_df |>
   head(5)
 # NOTE: these are basically SES features
 
+# Table for the report
+a3_top5_table <- a3_top5_features_PC1 |>
+  mutate(
+    share     = 100 * share,
+    # The 5 features correlation with target
+    cor_crime = sapply(feature, function(f) {
+      cor(a3_communities_df[[f]], a3_communities_df$ViolentCrimesPerPop)
+    })
+  ) |>
+  select(feature, loading, share, cor_crime)
+
 # ggplot of PC1 to PC2, colored by 'ViolentCrimesPerPop' (target)
 a3_pc_scores_df <- tibble(
   PC1 = a3_princomp$scores[, 1],
@@ -102,12 +131,26 @@ a3_pc_scores_df <- tibble(
 
 a3_pc12_scores_plot <- ggplot(a3_pc_scores_df,
                               aes(x = PC1, y = PC2, colour = ViolentCrimesPerPop)) +
-  geom_point(size = 1.7, alpha = 0.8) +
+  # point formatting
+  geom_point(size = 1.7, alpha = 0.8, shape = 16) +
   scale_colour_viridis_c() +
+  # labels
   labs(x = paste0("PC1 (", scales::percent(a3_prop_df$prop_var[1], accuracy = 0.1), ")"),
        y = paste0("PC2 (", scales::percent(a3_prop_df$prop_var[2], accuracy = 0.1), ")"),
        colour = "ViolentCrimesPerPop") +
   theme_bw()
+
+# correlation between each component's scores and the target
+a3_cor_pc1_crime <- cor(a3_pc_scores_df$PC1, a3_pc_scores_df$ViolentCrimesPerPop)
+a3_cor_pc2_crime <- cor(a3_pc_scores_df$PC2, a3_pc_scores_df$ViolentCrimesPerPop)
+
+# top 5 features on PC2 (by absolute loading), to interpret the PC2 axis
+a3_top5_features_PC2 <- tibble(
+  feature = rownames(a3_loadings),
+  loading = a3_loadings[, 2]
+) |>
+  arrange(desc(abs(loading))) |>
+  head(5)
 
 
 
@@ -136,7 +179,8 @@ a3_y_test <- a3_test_scaled_df$ViolentCrimesPerPop
 a3_test_pred <- predict(a3_lm, newdata = a3_test_scaled_df)
 
 # training and test errors (MSE, on the scaled response)
-a3_lm_train_mse <- a3_mse(a3_y_test, a3_test_pred)
+a3_lm_train_mse <- a3_mse(a3_train_scaled_df$ViolentCrimesPerPop,
+                          predict(a3_lm, newdata = a3_train_scaled_df))
 a3_lm_test_mse  <- a3_mse(a3_y_test, a3_test_pred)
 
 # training and test R2 values

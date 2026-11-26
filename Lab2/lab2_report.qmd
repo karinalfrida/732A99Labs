@@ -32,8 +32,10 @@ execute:
 
 ```{r packages}
 #| include: false
-# library(tidyverse)
-# library(patchwork)
+library(tidyverse)
+library(patchwork)
+library(caret)
+
 ```
 
 \justifying
@@ -48,7 +50,7 @@ execute:
 
 \clearpage
 # Assignment 3
-<!-- {{< include sections/lab2_assignment3.qmd >}} -->
+{{< include sections/lab2_assignment3.qmd >}}
 
 \clearpage
 # Theory
