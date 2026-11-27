@@ -1,0 +1,32 @@
+<!-- Assignment 4: Theory -->
+<!-- Each answer: at most five sentences, with page numbers in MLFC -->
+<!-- (Lindholm et al. 2022, preliminary 2026 pdf version, as in Lab 1). -->
+
+## What are the practical approaches for reducing the expected new data error, according to the book?
+
+The expected new data error ($E_{\text{new}}$) can be reduced by decreasing the training error and the generalisation gap. If the model is underfitting, we can increase its flexibility by adding parameters or reducing regularisation. In contrast, if the model is overfitting, we can decrease its flexibility by reducing model complexity or increasing regularisation. Collecting more training data is also recommended, as it usually reduces the generalisation gap. Cross-validation can be used to compare models and select appropriate hyperparameters.
+
+The preliminary 2026 pdf version of the book (Lindholm et al. 2022) describes this on pages 78–79.
+
+## What important aspect should be considered when selecting minibatches, according to the book?
+
+The minibatches should be balanced and representative of the whole training dataset. If, for example, the data are sorted by output class, the first minibatch would contain only one class and give a poor approximation of the gradient for the full dataset. The minibatches should therefore be formed randomly, for example by shuffling the training data and then dividing it into minibatches in order, and reshuffling the data again after each epoch.
+
+The preliminary 2026 pdf version of the book (Lindholm et al. 2022) describes this on page 129.
+
+## Provide an example of modifications in a loss function and in data that can be done to take into account the data imbalance, according to the book?
+
+Data imbalance can be addressed by modifying either the loss function or the training data. Assuming that the positive class is underrepresented, the misclassification loss can be modified as follows:
+
+$$
+L(y, \hat{y}) =
+\begin{cases}
+0 & \text{if } \hat{y} = y, \\
+1 & \text{if } \hat{y} \neq y \text{ and } y = -1, \\
+C & \text{if } \hat{y} \neq y \text{ and } y = 1.
+\end{cases}
+$$
+
+Here, if we are not predicting $y = 1$ correctly it is considered $C$ times as severe a mistake as not predicting $y = -1$ correctly.
+
+The preliminary 2026 pdf version of the book (Lindholm et al. 2022) describes this on pages 105–106, equation (5.19).
