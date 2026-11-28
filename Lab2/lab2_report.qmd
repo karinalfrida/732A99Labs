@@ -39,7 +39,7 @@ execute:
 \justifying
 
 # Assignment 1
- <!-- {{< include sections/lab2_assignment1.qmd >}} -->
+{{< include sections/lab2_assignment1.qmd >}}
 
 
 \clearpage

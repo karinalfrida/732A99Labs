@@ -1,0 +1,89 @@
+```{r}
+#| include: false
+# Run the assignment 1 script in its own environment so that its variable
+# names (n, train, test, ...) cannot collide with the other assignments.
+a1 <- new.env()
+sys.source("R/lab2_assignment1.R", envir = a1)
+
+# Values used in the text
+a1_lambda3 <- a1$fit_lasso$lambda[a1$fit_lasso$df == 3]
+a1_coef3 <- coef(a1$fit_lasso, s = a1_lambda3[2])
+a1_channels3 <- setdiff(rownames(a1_coef3)[as.vector(a1_coef3 != 0)],
+                        "(Intercept)")
+
+a1_cv <- a1$cv_lasso
+a1_idx_min <- which(a1_cv$lambda == a1_cv$lambda.min)
+a1_idx_m4 <- which.min(abs(log(a1_cv$lambda) - (-4)))
+```
+
+## Linear regression
+
+The fat content $y$ is modelled as a linear function of the 100 absorbance channels $x_1, \dots, x_{100}$ plus normally distributed noise. The underlying probabilistic model is
+
+$$
+y \mid \mathbf{x}, \boldsymbol{\theta}, \sigma \sim N\!\left(\theta_0 + \sum_{j=1}^{100} \theta_j x_j,\ \sigma^2\right),
+$$
+
+where the noise terms are assumed independent between samples. The parameters $\boldsymbol{\theta}$ are estimated by least squares on the training data, which is equivalent to maximum likelihood under this model.
+
+The training MSE is `r round(a1$mse_train, 4)` and the test MSE is `r round(a1$mse_test, 1)`. For comparison, predicting the mean for every sample would give an MSE of about `r round(var(a1$test_lm$Fat), 1)` on the test data. The model fits the training data almost perfectly but predicts new data worse than the mean, so it is heavily overfitted. The reason is that the model has 101 parameters but only `r nrow(a1$train_lm)` training observations, and the neighbouring channels are strongly correlated, which makes $\hat{\boldsymbol{\theta}}$ very unstable. The quality of the model is therefore poor.
+
+## LASSO cost function
+
+For LASSO regression, the cost function to be minimised is the mean squared error plus an L1 penalty on the coefficients:
+
+$$
+\hat{\boldsymbol{\theta}}^{\text{lasso}} = \arg\min_{\boldsymbol{\theta}} \; \frac{1}{n}\sum_{i=1}^{n}\left(y_i - \theta_0 - \sum_{j=1}^{100}\theta_j x_{ij}\right)^2 + \lambda \sum_{j=1}^{100} |\theta_j|,
+$$
+
+where $\lambda \geq 0$ is the penalty factor and the intercept $\theta_0$ is not penalised. (`glmnet` uses $\frac{1}{2n}$ instead of $\frac{1}{n}$, which only rescales $\lambda$.)
+
+## LASSO coefficient paths
+
+```{r}
+#| label: fig-a1-lasso
+#| fig-cap: "LASSO coefficients as a function of the penalty factor. Note that the x-axis shows $-\\log\\lambda$, so the penalty decreases to the right. The top axis shows the number of non-zero coefficients."
+#| fig-height: 4
+plot(a1$fit_lasso, xvar = "lambda", label = TRUE)
+```
+
+@fig-a1-lasso shows how the coefficients depend on $\lambda$. For large $\lambda$ all coefficients are zero. As $\lambda$ decreases, the channels enter the model one at a time, and for small $\lambda$ many channels are included with large coefficients. The jumps in the middle of the plot show that LASSO switches between neighbouring channels, which is a consequence of the strong correlation between them.
+
+A model with exactly three features is obtained for $\lambda$ between approximately `r round(min(a1_lambda3), 2)` and `r round(max(a1_lambda3), 2)`, for example $\lambda = `r round(a1_lambda3[2], 2)`$ ($\log\lambda \approx `r round(log(a1_lambda3[2]), 2)`$). The selected channels are then `r paste(a1_channels3, collapse = ", ")`.
+
+## Ridge regression
+
+```{r}
+#| label: fig-a1-ridge
+#| fig-cap: "Ridge coefficients as a function of the penalty factor ($-\\log\\lambda$ on the x-axis)."
+#| fig-height: 4
+plot(a1$fit_ridge, xvar = "lambda", label = TRUE)
+```
+
+In contrast to LASSO, Ridge never sets any coefficient exactly to zero (@fig-a1-ridge). All 100 channels stay in the model for every $\lambda$, and the coefficients shrink smoothly towards zero as $\lambda$ increases. Neighbouring channels get similar coefficients, since Ridge spreads the weight over groups of correlated features instead of picking one of them. The coefficients are also much smaller than for LASSO with a small penalty.
+
+The conclusion is that LASSO performs variable selection and gives a sparse, more interpretable model, but the choice of which channel to keep within a group of correlated channels is unstable. Ridge does not select variables but gives more stable coefficients.
+
+## Cross-validation
+
+```{r}
+#| label: fig-a1-cv
+#| fig-cap: "10-fold cross-validation MSE for LASSO as a function of $-\\log\\lambda$, with one standard error bars. The right dashed line marks the optimal $\\lambda$ and the left one the largest $\\lambda$ within one standard error of the minimum."
+#| fig-height: 4
+plot(a1$cv_lasso)
+```
+
+@fig-a1-cv shows the cross-validation score as a function of $\lambda$. Note that the x-axis shows $-\log\lambda$, so the penalty decreases to the right and $\log\lambda = -4$ corresponds to 4 on the axis. For large $\lambda$ the model has at most one feature and the CV error is high. The error drops sharply as more channels enter the model and levels off at around $-\log\lambda \approx 2.7$, after which adding more features does not improve the predictions.
+
+The optimal penalty is $\lambda = `r round(a1_cv$lambda.min, 4)`$ ($\log\lambda = `r round(log(a1_cv$lambda.min), 2)`$), and the corresponding model uses `r a1_cv$nzero[a1_idx_min]` of the 100 channels. At $\log\lambda = -4$ the CV error is `r round(a1_cv$cvm[a1_idx_m4], 2)`, which is almost identical to the minimum of `r round(a1_cv$cvm[a1_idx_min], 2)` (standard error `r round(a1_cv$cvsd[a1_idx_min], 2)`). The difference is much smaller than the error bars, so the plot does not suggest that the optimal $\lambda$ gives a statistically significantly better prediction than $\log\lambda = -4$.
+
+```{r}
+#| label: fig-a1-scatter
+#| fig-cap: "True versus predicted fat content for the test data, using the LASSO model with the optimal $\\lambda$. The red line is $y = x$."
+#| fig-height: 4
+plot(a1$y_test, a1$pred_test_lasso,
+     xlab = "True fat", ylab = "Predicted fat")
+abline(0, 1, col = "red")
+```
+
+The test MSE for the optimal model is `r round(a1$mse_test_lasso, 1)`, compared with `r round(a1$mse_test, 1)` for the unregularized linear regression. In @fig-a1-scatter the points lie close to the line $y = x$ over the whole range, so the predictions are good. For very high fat contents (above about 45) the model systematically overestimates the fat content, which suggests that the relationship is not completely linear at that end. There is also one clear outlier at a true fat content of about 26.
