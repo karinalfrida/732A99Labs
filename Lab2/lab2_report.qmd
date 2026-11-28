@@ -41,7 +41,7 @@ library(caret)
 \justifying
 
 # Assignment 1
- <!-- {{< include sections/lab2_assignment1.qmd >}} -->
+{{< include sections/lab2_assignment1.qmd >}}
 
 
 \clearpage
@@ -84,9 +84,9 @@ conclusions from all assignments were discussed collectively.
 ## Assignment 1
 
 ```{r}
-##| file: R/lab2_assignment1.R
-##| echo: true
-##| eval: false
+#| file: R/lab2_assignment1.R
+#| echo: true
+#| eval: false
 ```
 
 
